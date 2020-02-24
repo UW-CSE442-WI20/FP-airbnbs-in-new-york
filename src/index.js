@@ -22,3 +22,8 @@ d3.csv('carbon-emissions.csv')
     console.log('Dynamically loaded CSV data', data);
   })
 
+$('#fullpage').fullpage({
+    anchors:['firstPage', 'secondPage', 'thirdPage', 'fourthPage'],
+    navigation: true,
+	navigationPosition: 'right'
+});
