@@ -13,7 +13,10 @@ myClassInstance.sayHi();
 // Note this does not add a network request, it adds
 // the data directly to your JavaScript bundle.
 const exampleData = require('./example-data.json');
+const neighborhoods = require('../data/neighbourhoods.geo.json');
 
+const mapWidth = 600;
+const mapHeight = 600;
 
 // Anything you put in the static folder will be available
 // over the network, e.g.
@@ -27,3 +30,15 @@ $('#fullpage').fullpage({
     navigation: true,
 	navigationPosition: 'right'
 });
+
+var projection = d3.geoMercator()
+.center([-73.94, 40.70])
+	.scale(60000)
+	.translate([mapWidth / 2, mapHeight / 2]);
+var geoPath = d3.geoPath().projection(projection);
+
+d3.select("#map-svg").selectAll("path")
+    .data(neighborhoods.features)
+    .enter()
+    .append('path')
+    .attr("d", geoPath);
