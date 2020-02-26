@@ -48,9 +48,14 @@ d3.select("#map-svg").selectAll("path")
   .attr("class", function(d) {
     return d.properties.neighbourhood_group; // borough name
   })
-  .on("mouseover", handleMouseOver);
+  .on("mouseover", handleMouseOver)
+  .on("mouseout", handleMouseOut);
 
   // Display the neighborhood and borough name on mouseover
   function handleMouseOver(d) {
     d3.select("p").text("Neighborhood: " + this.id + ", Borough: " + d.properties.neighbourhood_group);
+  }
+
+  function handleMouseOut(d) {
+    d3.select("p").text("Neighborhood: none selected, Borough: none selected");
   }
