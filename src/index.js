@@ -2,6 +2,7 @@
 
 // You can require libraries
 const d3 = require('d3')
+const tipsy = require('jquery.tipsy') // for tooltip
 
 // You can include local JS files:
 const MyClass = require('./my-class');
@@ -48,14 +49,28 @@ d3.select("#map-svg").selectAll("path")
   .attr("class", function(d) {
     return d.properties.neighbourhood_group; // borough name
   })
+  .style("stroke", "#ffffff") // set outline to be white
   .on("mouseover", handleMouseOver)
   .on("mouseout", handleMouseOut);
 
   // Display the neighborhood and borough name on mouseover
   function handleMouseOver(d) {
+    d3.select(this).style("fill", "#d2b48c");
     d3.select("p").text("Neighborhood: " + this.id + ", Borough: " + d.properties.neighbourhood_group);
   }
 
+  // Reset the visual to black fill on mouseout
   function handleMouseOut(d) {
+    d3.select(this).style("fill", "black");
     d3.select("p").text("Neighborhood: none selected, Borough: none selected");
   }
+
+$('svg path').tipsy({
+    gravity: 'w',
+    html: true,
+    title: function () {
+      var d = this.__data__;
+      return 'Neighborhood: ' + this.id + '<br>' + 'Borough: ' + d.properties.neighbourhood_group;
+  }
+});
+
