@@ -26,19 +26,31 @@ d3.csv('carbon-emissions.csv')
   })
 
 $('#fullpage').fullpage({
-    anchors:['firstPage', 'secondPage', 'thirdPage', 'fourthPage'],
-    navigation: true,
-	navigationPosition: 'right'
+  anchors: ['firstPage', 'secondPage', 'thirdPage', 'fourthPage'],
+  navigation: true,
+  navigationPosition: 'right'
 });
 
 var projection = d3.geoMercator()
-.center([-73.94, 40.70])
-	.scale(60000)
-	.translate([mapWidth / 2, mapHeight / 2]);
+  .center([-73.94, 40.70])
+  .scale(60000)
+  .translate([mapWidth / 2, mapHeight / 2]);
 var geoPath = d3.geoPath().projection(projection);
 
 d3.select("#map-svg").selectAll("path")
-    .data(neighborhoods.features)
-    .enter()
-    .append('path')
-    .attr("d", geoPath);
+  .data(neighborhoods.features)
+  .enter()
+  .append('path')
+  .attr("d", geoPath)
+  .attr("id", function(d) {
+    return d.properties.neighbourhood; // neighborhood name
+  })
+  .attr("class", function(d) {
+    return d.properties.neighbourhood_group; // borough name
+  })
+  .on("mouseover", handleMouseOver);
+
+  // Display the neighborhood and borough name on mouseover
+  function handleMouseOver(d) {
+    d3.select("p").text("Neighborhood: " + this.id + ", Borough: " + d.properties.neighbourhood_group);
+  }
