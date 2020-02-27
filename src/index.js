@@ -1,7 +1,3 @@
-
-import listingsData from "../data/listings_small.csv";
-
-// You can require libraries
 const d3 = require('d3')
 const tipsy = require('jquery.tipsy') // for tooltip
 
@@ -15,10 +11,10 @@ const neighborhoods = require('../data/neighbourhoods.geo.json');
 const mapWidth = 640;
 const mapHeight = 600;
 
-d3.csv(listingsData)
+d3.csv("listings_small.csv")
   .then((data) => {
     console.log('Dynamically loaded CSV data', data);
-}) 
+})
 
 $('#fullpage').fullpage({
   anchors: ['firstPage', 'secondPage', 'thirdPage', 'fourthPage'],
