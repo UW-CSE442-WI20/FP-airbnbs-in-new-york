@@ -6,10 +6,18 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.6.6/jquery.fullPage.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="./styles.css">
     <link rel="stylesheet" type="text/css" href="./tipsy.css">
+    <link  rel="stylesheet" type="text/css" href="./piechart.css" />
+
     <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.6.6/jquery.fullPage.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+          <!-- javascript -->
+      <!-- <script src="./doughnut.js"></script>
+      <script src="./jquery.min.js"></script> -->
+
   </head>
   <body>
       <div id="fullpage">
@@ -27,8 +35,25 @@
             </div>
           </div>
           <div class="section">Some section</div>
-          <div class="section gray">Some section</div>
+          <div class="section gray">
+            <p></p>
+            <!-- <svg width = "600" height = "600" id = "piechart-svg"></svg> -->
+            <!-- <canvas id="piechart-canvas" width="600" height="600"></canvas> -->
+
+
+            <div class="chart-container">
+              <div class="doughnut-chart-container">
+                  <canvas id="doughnut-chartcanvas-1"></canvas>
+              </div>
+      
+              <div class="doughnut-chart-container">
+                  <canvas id="doughnut-chartcanvas-2"></canvas>
+              </div>
+          </div>
+
+          </div>
       </div>
       <script src="./index.js"></script>
+      <script src="./piechart.js"></script>
   </body>
 </html>
