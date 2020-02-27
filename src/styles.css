@@ -9,3 +9,18 @@ body {
 .gray {
     background-color: whitesmoke;
 }
+
+.box {
+    width: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.left {
+    left: 0;
+}
+
+.right {
+    right: 0;
+}

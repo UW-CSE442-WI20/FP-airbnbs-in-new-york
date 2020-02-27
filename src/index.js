@@ -1,6 +1,3 @@
-
-
-// You can require libraries
 const d3 = require('d3')
 const tipsy = require('jquery.tipsy') // for tooltip
 
@@ -9,22 +6,18 @@ const MyClass = require('./my-class');
 const myClassInstance = new MyClass();
 myClassInstance.sayHi();
 
+// Draw map
+const Map = require('./map');
+const myMap = new Map();
+myMap.drawMap();
 
-// You can load JSON files directly via require.
-// Note this does not add a network request, it adds
-// the data directly to your JavaScript bundle.
-const exampleData = require('./example-data.json');
-const neighborhoods = require('../data/neighbourhoods.geo.json');
-
-const mapWidth = 600;
-const mapHeight = 600;
-
-// Anything you put in the static folder will be available
-// over the network, e.g.
-d3.csv('carbon-emissions.csv')
+// listings csv includes id, name, host_id, host_name, neighbourhood_group, neigbhorhood,
+// latitude, longitude, room_type, price, minimum_nights, number_of_reviews, last_review,
+// reviews_per_month, calculated_host_listings_count, property_type, guests_included, amenities
+d3.csv("listings_small.csv")
   .then((data) => {
     console.log('Dynamically loaded CSV data', data);
-  })
+})
 
 $('#fullpage').fullpage({
   anchors: ['firstPage', 'secondPage', 'thirdPage', 'fourthPage'],
