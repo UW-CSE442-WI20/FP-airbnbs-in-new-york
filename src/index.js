@@ -16,7 +16,7 @@ myClassInstance.sayHi();
 const exampleData = require('./example-data.json');
 const neighborhoods = require('../data/neighbourhoods.geo.json');
 
-const mapWidth = 600;
+const mapWidth = 640;
 const mapHeight = 600;
 
 // Anything you put in the static folder will be available
@@ -56,13 +56,13 @@ d3.select("#map-svg").selectAll("path")
   // Display the neighborhood and borough name on mouseover
   function handleMouseOver(d) {
     d3.select(this).style("fill", "#d2b48c");
-    d3.select("p").text("Neighborhood: " + this.id + ", Borough: " + d.properties.neighbourhood_group);
+    d3.select("#selection").text("Neighborhood: " + this.id + ", Borough: " + d.properties.neighbourhood_group);
   }
 
   // Reset the visual to black fill on mouseout
   function handleMouseOut(d) {
     d3.select(this).style("fill", "black");
-    d3.select("p").text("Neighborhood: none selected, Borough: none selected");
+    d3.select("#selection").text("Neighborhood: none selected, Borough: none selected");
   }
 
 $('svg path').tipsy({
@@ -73,4 +73,3 @@ $('svg path').tipsy({
       return 'Neighborhood: ' + this.id + '<br>' + 'Borough: ' + d.properties.neighbourhood_group;
   }
 });
-
