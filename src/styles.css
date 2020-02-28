@@ -24,3 +24,12 @@ body {
 .right {
     right: 0;
 }
+
+.background {
+  fill: none;
+  pointer-events: all;
+}
+
+.active {
+    outline: none;
+}

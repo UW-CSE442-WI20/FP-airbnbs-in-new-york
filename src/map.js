@@ -2,16 +2,26 @@ const d3 = require('d3')
 const mapWidth = 640;
 const mapHeight = 600;
 const neighborhoods = require('../data/neighbourhoods.geo.json');
+var active = d3.select(null);
 
 class Map {
   constructor() {}
 
   drawMap() {
+
+    d3.select("#map-svg").append("rect")
+        .attr("class", "background")
+        .attr("width", mapWidth)
+        .attr("height", mapHeight)
+        .on("click", reset);
+
     var projection = d3.geoMercator()
       .center([-73.94, 40.70])
       .scale(60000)
       .translate([mapWidth / 2, mapHeight / 2]);
     var geoPath = d3.geoPath().projection(projection);
+
+    var g = d3.select("map-svg").append("g");
 
     d3.select("#map-svg").selectAll("path")
       .data(neighborhoods.features)
@@ -24,20 +34,56 @@ class Map {
       .attr("class", function(d) {
         return d.properties.neighbourhood_group; // borough name
       })
+      .style("fill", "D3D3D3")
       .style("stroke", "#ffffff") // set outline to be white
       .on("mouseover", handleMouseOver)
-      .on("mouseout", handleMouseOut);
+      .on("mouseout", handleMouseOut)
+      .on("click", handlePathClick);
 
       // Display the neighborhood and borough name on mouseover
       function handleMouseOver(d) {
-        d3.select(this).style("fill", "#d2b48c");
+        d3.select(this).style("fill", "#E9A553").style("cursor", "pointer"); ;
         d3.select("#selection").text("Neighborhood: " + this.id + ", Borough: " + d.properties.neighbourhood_group);
       }
 
       // Reset the visual to black fill on mouseout
       function handleMouseOut(d) {
-        d3.select(this).style("fill", "black");
+        d3.select(this).style("fill", "D3D3D3").style("cursor", "default"); ;
         d3.select("#selection").text("Neighborhood: none selected, Borough: none selected");
+      }
+
+      function handlePathClick(d) {
+          if (active.node() === this) return reset();
+          active.classed("active", false);
+          active = d3.select(this).classed("active", true);
+
+          var zoom = d3.zoom().on("zoom", zoomed);
+          d3.select(this).style("fill", "#D3D3D3");
+          var bounds = geoPath.bounds(d),
+              dx = bounds[1][0] - bounds[0][0],
+              dy = bounds[1][1] - bounds[0][1],
+              x = (bounds[0][0] + bounds[1][0]) / 2,
+              y = (bounds[0][1] + bounds[1][1]) / 2,
+              scale = 0.5 / Math.max(dx / mapWidth, dy / mapHeight),
+              translate = [mapWidth / 2 - scale * x, mapHeight / 2 - scale * y];
+
+          d3.select("#map-svg").transition()
+                .duration(750)
+                .style("stroke-width", "0.5px")
+                .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+      }
+
+      function zoomed() {
+          d3.select("#map-svg").attr("transform", d3.event.transform);
+      }
+
+      function reset() {
+          active.classed("active", false);
+          active = d3.select(null);
+          d3.select("#map-svg").transition()
+              .duration(750)
+              .style("stroke-width", "0.5px")
+              .attr("transform", "");
       }
 
     $('svg path').tipsy({
