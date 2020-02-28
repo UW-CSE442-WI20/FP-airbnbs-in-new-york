@@ -54,6 +54,7 @@ class Map {
 
       function handlePathClick(d) {
           if (active.node() === this) return reset();
+          d3.select(this).style("outline", "none");
           active.classed("active", false);
           active = d3.select(this).classed("active", true);
 
