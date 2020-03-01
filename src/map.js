@@ -1,14 +1,19 @@
 const d3 = require('d3')
 const mapWidth = 640;
 const mapHeight = 600;
+let minNumListings = 10;
+let maxNumListings = 500;
+const colorPalette = ['#d3d3d3','#f5ad49','#e08984','#bf809b','#776399', '#5374a6'];
 const neighborhoods = require('../data/neighbourhoods.geo.json');
+const neighborhoodMap = d3.map();
 var active = d3.select(null);
 
-class Map {
+class MapVis {
   constructor() {}
 
   drawMap() {
-
+    this.getNeighborhoodCounts();
+    var colorScale = d3.scaleQuantize().domain([minNumListings, maxNumListings]).range(colorPalette);
     d3.select("#map-svg").append("rect")
         .attr("class", "background")
         .attr("width", mapWidth)
@@ -34,7 +39,10 @@ class Map {
       .attr("class", function(d) {
         return d.properties.neighbourhood_group; // borough name
       })
-      .style("fill", "D3D3D3")
+      .style("fill", function(d) {
+        return colorScale(0);
+        //return colorScale(neighborhoodMap.get(d.properties.neighbourhood));
+      })
       .style("stroke", "#ffffff") // set outline to be white
       .on("mouseover", handleMouseOver)
       .on("mouseout", handleMouseOut)
@@ -42,13 +50,16 @@ class Map {
 
       // Display the neighborhood and borough name on mouseover
       function handleMouseOver(d) {
-        d3.select(this).style("fill", "#E9A553").style("cursor", "pointer"); ;
+        d3.select(this).style("fill", "#E9A553").style("cursor", "pointer");
         d3.select("#selection").text("Neighborhood: " + this.id + ", Borough: " + d.properties.neighbourhood_group);
       }
 
       // Reset the visual to black fill on mouseout
       function handleMouseOut(d) {
-        d3.select(this).style("fill", "D3D3D3").style("cursor", "default"); ;
+        //d3.select(this).style("fill", "D3D3D3").style("cursor", "default");
+        d3.select(this).style("fill", () => {
+          return colorScale(neighborhoodMap.get(this.id));
+        }).style("cursor", "pointer");
         d3.select("#selection").text("Neighborhood: none selected, Borough: none selected");
       }
 
@@ -92,7 +103,9 @@ class Map {
         html: true,
         title: function () {
           var d = this.__data__;
-          return 'Neighborhood: ' + this.id + '<br>' + 'Borough: ' + d.properties.neighbourhood_group;
+          return 'Neighborhood: ' + this.id + '<br>' + 
+                 'Borough: ' + d.properties.neighbourhood_group + 
+                 '<br> Number of listings: ' + neighborhoodMap.get(this.id);
       }
     });
   }
@@ -128,6 +141,22 @@ class Map {
                 .on("click", (d) => d3.select("#price").text("Price: $" + d[2]));
       });
   }
+
+  getNeighborhoodCounts() {
+    console.log("starting mapping...");
+    d3.csv("listings_small.csv")
+        .then((data) => {
+            data.forEach(function(d) {
+                let key = d.neighbourhood;
+                if (neighborhoodMap.has(key)) {
+                  var value = neighborhoodMap.get(key);
+                  neighborhoodMap.set(key, value + 1);
+                } else {
+                  neighborhoodMap.set(key, 1);
+                }
+            });
+    });
+  }
 }
 
-module.exports = Map;
+module.exports = MapVis;
