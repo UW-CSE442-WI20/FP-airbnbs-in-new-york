@@ -7,8 +7,8 @@ const myClassInstance = new MyClass();
 myClassInstance.sayHi();
 
 // Draw map
-const Map = require('./map');
-const myMap = new Map();
+const MapVis = require('./map');
+const myMap = new MapVis();
 myMap.drawMap();
 myMap.drawListingPoints();
 

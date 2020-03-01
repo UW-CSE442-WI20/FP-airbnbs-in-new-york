@@ -50,7 +50,9 @@ class MapVis {
 
       // Display the neighborhood and borough name on mouseover
       function handleMouseOver(d) {
-        d3.select(this).style("fill", "#E9A553").style("cursor", "pointer");
+        d3.select(this)
+            .style("fill", "#E9A553")
+            .style("cursor", "pointer");
         d3.select("#selection").text("Neighborhood: " + this.id + ", Borough: " + d.properties.neighbourhood_group);
       }
 
@@ -59,7 +61,7 @@ class MapVis {
         //d3.select(this).style("fill", "D3D3D3").style("cursor", "default");
         d3.select(this).style("fill", () => {
           return colorScale(neighborhoodMap.get(this.id));
-        }).style("cursor", "pointer");
+        });
         d3.select("#selection").text("Neighborhood: none selected, Borough: none selected");
       }
 
@@ -70,7 +72,10 @@ class MapVis {
           active = d3.select(this).classed("active", true);
 
           var zoom = d3.zoom().on("zoom", zoomed);
-          d3.select(this).style("fill", "#D3D3D3");
+          d3.select("#map-svg").selectAll("path")
+            .on("mouseover", handleMouseOver);
+          d3.select(this).style("fill", "#D3D3D3")
+            .on("mouseover", d3.select(this).style("fill", "#D3D3D3"));
           var bounds = geoPath.bounds(d),
               dx = bounds[1][0] - bounds[0][0],
               dy = bounds[1][1] - bounds[0][1],
@@ -103,8 +108,8 @@ class MapVis {
         html: true,
         title: function () {
           var d = this.__data__;
-          return 'Neighborhood: ' + this.id + '<br>' + 
-                 'Borough: ' + d.properties.neighbourhood_group + 
+          return 'Neighborhood: ' + this.id + '<br>' +
+                 'Borough: ' + d.properties.neighbourhood_group +
                  '<br> Number of listings: ' + neighborhoodMap.get(this.id);
       }
     });
@@ -138,6 +143,7 @@ class MapVis {
                     return projection(datum)[1]; })
           		.attr("r", "1px")
           		.attr("fill", "#fd5c63")
+                .style("cursor", "pointer")
                 .on("click", (d) => d3.select("#price").text("Price: $" + d[2]));
       });
   }
