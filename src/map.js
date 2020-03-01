@@ -15,13 +15,13 @@ class MapVis {
         .then((data) => {
             data.forEach(function(d) {
                 let point = [d.longitude, d.latitude, d.price];
-                let nh = d.neighbourhood;
-                if (neighborhoodListings.has(nh)) {
-                    let currentListings = neighborhoodListings.get(nh);
+                let key = d.neighbourhood;
+                if (neighborhoodListings.has(key)) {
+                    let currentListings = neighborhoodListings.get(key);
                     currentListings.push(point);
-                    neighborhoodListings.set(nh, currentListings);
+                    neighborhoodListings.set(key, currentListings);
                 } else {
-                    neighborhoodListings.set(nh, [point]);
+                    neighborhoodListings.set(key, [point]);
                 }
             });
         });
@@ -29,7 +29,7 @@ class MapVis {
 
   drawMap() {
     this.getNeighborhoodCounts();
-    var colorScale = d3.scaleQuantize().domain([minNumListings, maxNumListings]).range(colorPalette);
+    var colorScale = d3.scaleQuantize().domain([minNumListings,maxNumListings]).range(colorPalette);
     d3.select("#map-svg").append("rect")
         .attr("class", "background")
         .attr("width", mapWidth)
@@ -125,6 +125,7 @@ class MapVis {
             .remove();
       }
 
+      // bug where does not draw on first click from zoomed out map
       function drawListingPoints(id) {
           console.log(neighborhoodListings.get(id));
           var circles = d3.select("#map-svg").selectAll("circle")
@@ -143,7 +144,13 @@ class MapVis {
           	.attr("r", "1px")
           	.attr("fill", "#fd5c63")
             .style("cursor", "pointer")
-            .on("click", (d) => d3.select("#price").text("Price: $" + d[2]));
+            .on("click", handlePointClick);
+      }
+
+      function handlePointClick(d) {
+          d3.select("#price").text("Price: $" + d[2]);
+          d3.selectAll("circle").attr("fill", "#fd5c63")
+          d3.select(this).attr("fill", "black");
       }
 
     $('svg path').tipsy({
