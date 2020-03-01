@@ -1,11 +1,7 @@
-
-// SECTION 3: PIE CHARTS
-
-
-// And for a doughnut chart
+const d3 = require('d3');
 
 
-$(function(){
+    populateMap();
 
     //get the doughnut chart canvas
     var ctx1 = $("#doughnut-chartcanvas-1");
@@ -96,51 +92,80 @@ $(function(){
         data: data2,
         options: options
     });
-  });
 
-    Console.log("OPTIONS:" + options);
-  
-  
-  
-  
-  
-  
-  
-  
-  // // PIE CHART section 
-  // var data =  [2, 4, 8, 10]
-  
-  // // pie charts
-  // var svg = d3.select("#piechart-svg"),
-  // width = svg.attr("width"),
-  // height = svg.attr("height"),
-  // radius = Math.min(width, height) / 2,
-  // g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-  
-  
-  // var color = d3.scaleOrdinal(['#4daf4a','#377eb8','#ff7f00','#984ea3','#e41a1c']);
-  
-  // // Generate the pie
-  // var pie = d3.pie()
-  
-  // //debugging
-  // console.log(pie(data))
-  
-  // // Generate the arcs
-  // var arc = d3.arc()
-  //             .innerRadius(0)
-  //             .outerRadius(radius);
-  
-  // // Generate the groups
-  // var arcs = g.selectAll("arc")
-  // .data(pie(data))
-  // .enter()
-  // .append("g")
-  // .attr("class", "arc")
-  
-  //   //Draw arc paths
-  // arcs.append("path")
-  //     .attr("fill", function(d, i) {
-  //         return color(i);
-  //     })
-  //     .attr("d", arc);
+
+function populateMap() {
+    let propertyMap = new Map();
+
+// d3.csv("./data/listings.csv")
+// .then((data) => {
+//     // console.log(data);
+//     data.forEach(function(d) {
+//         let property_type = d.property_type;
+//         console.log(property_type);
+//     });
+
+
+    d3.csv("./data/listings.csv", function(d){
+        return {
+            property_type: d.property_type
+        };
+    }, function(error, rows) {
+        console.log(d[0]); //<-- this is the first row
+    });
+        
+    // d3.csv("example.csv", function(d) {
+    //     return {
+    //       year: new Date(+d.Year, 0, 1), // convert "Year" column to Date
+    //       make: d.Make,
+    //       model: d.Model,
+    //       length: +d.Length // convert "Length" column to number
+    //     };
+    //   }, function(error, rows) {
+    //     console.log(rows);
+    //   });
+
+
+    d3.csv("/data/listings.csv")
+    .then((data) => {
+        data.forEach(function(d) {
+            let property_type = d.property_type;
+            console.log(property_type);
+            switch (property_type) {
+                case 'Apartment':
+                    mapReplacement('Apartment', propertyMap);
+                case 'Guest suite':
+                    mapReplacement('Guest suite', propertyMap);
+                case 'Loft':
+                    mapReplacement('Loft', propertyMap);
+                case 'Bed and breakfast':
+                    mapReplacement('Bed and breakfast', propertyMap);
+                case 'Condominium':
+                    mapReplacement('Condominium', propertyMap);
+                case 'House':
+                    mapReplacement('House', propertyMap);
+                case 'Townhouse':
+                    mapReplacement('Townhouse', propertyMap);
+
+                default:
+                  console.log('Missed this property type: ' + property_type);
+              }
+            });
+      });
+    // print the result
+    for (let key of propertyMap.keys()) {
+        console.log("property: " + key);
+        console.log("count : " + propertyMap.get(key));
+        console.log();
+  }
+}
+
+
+function mapReplacement (property_type, propertyMap) {
+    if (propertyMap.get(property_type) == null){
+        propertyMap.set(property_type, 1);
+    } else {
+        propertyMap.set(property_type, propertyMap.get(property_type) + 1);
+    }
+}
+

@@ -106,7 +106,7 @@ class Map {
 
       d3.csv("listings_small.csv")
         .then((data) => {
-            console.log(data);
+            // console.log(data);
             data.forEach(function(d) {
                 let point = [d.longitude, d.latitude, d.price];
                 dataPoints.push(point);
