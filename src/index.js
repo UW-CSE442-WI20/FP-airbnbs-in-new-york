@@ -10,7 +10,6 @@ myClassInstance.sayHi();
 const MapVis = require('./map');
 const myMap = new MapVis();
 myMap.drawMap();
-myMap.drawListingPoints();
 
 // listings csv includes id, name, host_id, host_name, neighbourhood_group, neigbhorhood,
 // latitude, longitude, room_type, price, minimum_nights, number_of_reviews, last_review,
