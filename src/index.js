@@ -1,6 +1,8 @@
 const d3 = require('d3')
 const tipsy = require('jquery.tipsy') // for tooltip
 
+
+
 // You can include local JS files:
 const MyClass = require('./my-class');
 const myClassInstance = new MyClass();
@@ -11,6 +13,20 @@ const Map = require('./map');
 const myMap = new Map();
 myMap.drawMap();
 myMap.drawListingPoints();
+
+// draw pie chart
+const pieChart = require('./piechart');
+
+//get the doughnut chart canvas
+var ctx1 = $("#doughnut-chartcanvas-1");
+const chart1 = new pieChart(ctx1);
+
+var ctx2 = $("#doughnut-chartcanvas-2");
+//create Chart class object
+const chart2 = new pieChart(ctx2);
+
+
+
 
 // listings csv includes id, name, host_id, host_name, neighbourhood_group, neigbhorhood,
 // latitude, longitude, room_type, price, minimum_nights, number_of_reviews, last_review,
