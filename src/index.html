@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="./styles.css">
     <link rel="stylesheet" type="text/css" href="./tipsy.css">
     <link  rel="stylesheet" type="text/css" href="./piechart.css" />
+    <link  rel="stylesheet" type="text/css" href="./barchart.css" />
 
     <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
 
@@ -36,8 +37,21 @@
                 <p id="price"></p>
             </div>
           </div>
-          <div class="section">Some section</div>
+          <div class="section">
+            <div class="chart-container">
+              <div class="bar-chart-container">
+                <canvas id="barchart-chartcanvas-1"></canvas>
+              </div>
+              <div class="bar-chart-container">
+                <canvas id="barchart-chartcanvas-2"></canvas>
+              </div>
+              <div class="bar-chart-container">
+                <canvas id="barchart-chartcanvas-3"></canvas>
+              </div>
+            </div>
+          </div>
           <div class="section gray">
+
             <p></p>
             <!-- <svg width = "600" height = "600" id = "piechart-svg"></svg> -->
             <!-- <canvas id="piechart-canvas" width="600" height="600"></canvas> -->
@@ -57,5 +71,6 @@
       </div>
       <script src="./index.js"></script>
       <script src="./piechart.js"></script>
+      <script src="./barchart.js"></script>
   </body>
 </html>
