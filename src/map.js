@@ -14,7 +14,7 @@ class MapVis {
       d3.csv("listings_small.csv")
         .then((data) => {
             data.forEach(function(d) {
-                let point = [d.longitude, d.latitude, d.price];
+                let point = [d.longitude, d.latitude, d.minimum_nights];
                 let key = d.neighbourhood;
                 if (neighborhoodListings.has(key)) {
                     let currentListings = neighborhoodListings.get(key);
@@ -148,9 +148,44 @@ class MapVis {
       }
 
       function handlePointClick(d) {
-          d3.select("#price").text("Price: $" + d[2]);
+          d3.select("#min-nights").text("Minimum nights: " + d[2]);
           d3.selectAll("circle").attr("fill", "#fd5c63")
           d3.select(this).attr("fill", "black");
+          displayPriceOverYear();
+      }
+
+      function displayPriceOverYear() {
+          var ctx = $("#line-chart");
+          var myChart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: ['Jan', '', 'Feb', '', 'Mar', '', 'Apr', '', 'May', '', 'Jun', '', 'Jul', '', 'Aug', '', 'Sept', '', 'Oct', '', 'Nov', '', 'Dec'],
+                datasets: [{
+                    label: "Price ($USD)",
+                    backgroundColor: "rgba(0,51,102,0.3)",
+                    strokeColor: "rgba(151,187,205,1)",
+                    pointColor: "rgba(151,187,205,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(151,187,205,1)",
+                    data: [12, 19, 3, 17, 6, 3, 7, 9, 4, 13, 5, 10, 12, 19, 3, 17, 6, 3, 7, 9, 4, 13, 5, 10]
+                }]
+             },
+            options : {
+                tooltips: {
+                    callbacks: {
+                        title: function() {}
+                    }
+                },
+                scales : {
+                    xAxes : [ {
+                        gridLines : {
+                            display : false
+                        }
+                    } ]
+                }
+            }
+          });
       }
 
     $('svg path').tipsy({

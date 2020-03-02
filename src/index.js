@@ -11,7 +11,7 @@ const MapVis = require('./map');
 const myMap = new MapVis();
 myMap.drawMap();
 
-// listings csv includes id, name, host_id, host_name, neighbourhood_group, neigbhorhood,
+// listings csv includes id, name, host_id, host_name, neighbourhood_group, neighbourhood,
 // latitude, longitude, room_type, price, minimum_nights, number_of_reviews, last_review,
 // reviews_per_month, calculated_host_listings_count, property_type, guests_included, amenities
 // d3.csv("listings_small.csv")
