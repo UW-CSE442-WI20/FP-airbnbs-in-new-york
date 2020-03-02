@@ -40,8 +40,7 @@ class PieChartVis {
         d3.csv("listings_small.csv")
             .then((data) => {
                 data.forEach(function (d) {
-                    let key = d.property_type;
-                    // console.log("property_type : " +  key)
+                    let key = d.room_type;
                     if (propertyMap.has(key)) {
                         var value = propertyMap.get(key);
                         propertyMap.set(key, value + 1);
