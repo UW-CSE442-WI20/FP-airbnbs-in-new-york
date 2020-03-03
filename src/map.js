@@ -6,6 +6,9 @@ let maxNumListings = 500;
 const colorPalette = ['#d3d3d3', '#e08984', '#bf809b', '#65c1cf', '#5374a6', '#776399'];
 const neighborhoodsNYC = require('../data/neighbourhoods-nyc.geo.json');
 const neighborhoodsSeattle = require('../data/neighbourhoods-seattle.geo.json');
+const neighborhoodsAustin = require('../data/neighbourhoods-austin.geo.json');
+const neighborhoodsSF = require('../data/neighbourhoods-sf.geo.json');
+const neighborhoodsNOLA = require('../data/neighbourhoods-nola.geo.json');
 let neighborhoodListings = d3.map();
 let pricesMap = d3.map();
 var active = d3.select(null);
@@ -18,6 +21,15 @@ class MapVis {
     if (city === "Seattle") {
         listings_csv = "listings_seattle.csv";
         // update calendar_csv
+    } else if (city === "Austin") {
+        listings_csv = "listings_small_austin.csv";
+        // update calendar.csv
+    } else if (city === "San Francisco") {
+        listings_csv = "listings_small_sf.csv";
+        // update calendar.csv
+    } else if (city === "New Orleans") {
+        listings_csv = "listings_small_nola.csv";
+        // update calendar.csv
     }
     d3.csv(listings_csv)
       .then((data) => {
@@ -77,18 +89,36 @@ class MapVis {
       .attr("height", mapHeight)
       .on("click", reset);
 
+    // default is New York
     let neighborhoods = neighborhoodsNYC;
-    if (city === "New York") {
-        var projection = d3.geoMercator()
-          .center([-73.94, 40.70])
-          .scale(60000)
-          .translate([mapWidth / 2, mapHeight / 2]);
-    } else if (city == "Seattle") {
+    var projection = d3.geoMercator()
+      .center([-73.94, 40.70])
+      .scale(60000)
+      .translate([mapWidth / 2, mapHeight / 2]);
+    if (city == "Seattle") {
         var projection = d3.geoMercator()
           .center([-122.33, 47.61])
           .scale(90000)
           .translate([mapWidth / 2, mapHeight / 2]);
         neighborhoods = neighborhoodsSeattle;
+    } else if (city == "Austin") {
+        var projection = d3.geoMercator()
+          .center([-97.7559964, 30.3071816])
+          .scale(50000)
+          .translate([mapWidth / 2, mapHeight / 2]);
+        neighborhoods = neighborhoodsAustin;
+    } else if (city == "San Francisco") {
+        var projection = d3.geoMercator()
+          .center([-122.433701, 37.767683])
+          .scale(150000)
+          .translate([mapWidth / 2, mapHeight / 2]);
+        neighborhoods = neighborhoodsSF;
+    } else if (city == "New Orleans") {
+        var projection = d3.geoMercator()
+          .center([-89.92697, 30.03979])
+          .scale(60000)
+          .translate([mapWidth / 2, mapHeight / 2]);
+        neighborhoods = neighborhoodsNOLA;
     }
     var geoPath = d3.geoPath().projection(projection);
 
@@ -188,6 +218,7 @@ class MapVis {
         })
         .attr("r", "0.7px")
         .attr("fill", function (d) {
+            // TODO: fix for different cities
           if (d[3] <= 1881586) {
             return "#00ff00";
           } else {
