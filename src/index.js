@@ -10,7 +10,7 @@ myClassInstance.sayHi();
 
 // Draw map
 const MapVis = require('./map');
-const myMap = new MapVis();
+const myMap = new MapVis("New York");
 
 // draw pie chart
 const pieChart = require('./piechart');
