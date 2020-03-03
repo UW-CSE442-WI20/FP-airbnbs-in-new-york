@@ -11,7 +11,6 @@ myClassInstance.sayHi();
 // Draw map
 const MapVis = require('./map');
 const myMap = new MapVis();
-myMap.drawMap();
 
 // draw pie chart
 const pieChart = require('./piechart');
