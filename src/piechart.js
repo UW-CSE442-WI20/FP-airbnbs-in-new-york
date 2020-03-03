@@ -61,13 +61,13 @@ class PieChartVis {
                     // console.log("key : " + key);
                     // console.log("value : " + value);
                     if (value < 100) {
-                        console.log("key : " + key + " value : " + value);
+                        // console.log("key : " + key + " value : " + value);
                         propertyMap.remove(key);
                         propertyMap.set("other", propertyMap.get("other") + value);
                     }
                 }
 
-                                this.debuggingPrints();
+                                // this.debuggingPrints();
 
 
 
@@ -84,7 +84,7 @@ class PieChartVis {
                         }
                     ]
                 };
-        
+
                 //create Chart class object
                 var chart = new Chart(context, {
                     type: "doughnut",
@@ -123,7 +123,3 @@ class PieChartVis {
 
 
 module.exports = PieChartVis;
-
-
-
-

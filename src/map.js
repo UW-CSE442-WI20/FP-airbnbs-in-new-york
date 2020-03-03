@@ -7,6 +7,7 @@ const colorPalette = ['#d3d3d3','#f5ad49','#e08984','#bf809b','#776399', '#5374a
 const neighborhoods = require('../data/neighbourhoods.geo.json');
 const neighborhoodMap = d3.map();
 let neighborhoodListings = d3.map();
+let pricesMap = d3.map();
 var active = d3.select(null);
 
 class MapVis {
@@ -14,7 +15,7 @@ class MapVis {
       d3.csv("listings_small.csv")
         .then((data) => {
             data.forEach(function(d) {
-                let point = [d.longitude, d.latitude, d.minimum_nights];
+                let point = [d.longitude, d.latitude, d.minimum_nights, d.id];
                 let key = d.neighbourhood;
                 if (neighborhoodListings.has(key)) {
                     let currentListings = neighborhoodListings.get(key);
@@ -22,6 +23,23 @@ class MapVis {
                     neighborhoodListings.set(key, currentListings);
                 } else {
                     neighborhoodListings.set(key, [point]);
+                }
+            });
+        });
+      d3.csv("calendar.csv")
+        .then((data) => {
+            data.forEach(function(d) {
+                let id = d.listing_id;
+                let price = d.price;
+                price = price.replace("$", "");
+                price = price.replace(".00 ", "");
+                price = parseInt(price);
+                if (pricesMap.has(id)) {
+                    let currentPrices = pricesMap.get(id);
+                    currentPrices.push(price);
+                    pricesMap.set(id, currentPrices);
+                } else {
+                    pricesMap.set(id, [price]);
                 }
             });
         });
@@ -125,7 +143,6 @@ class MapVis {
       }
 
       function drawListingPoints(id) {
-          console.log(neighborhoodListings.get(id));
           d3.select("#map-svg").selectAll("circle").remove();
           var circles = d3.select("#map-svg").selectAll("circle")
             .data(neighborhoodListings.get(id));
@@ -138,51 +155,74 @@ class MapVis {
                     let datum = [d[0], d[1]];
                     return projection(datum)[1];
                 })
-              .attr("r", "1px")
-              .attr("fill", "#fd5c63")
+              .attr("r", "0.7px")
+              .attr("fill", function (d) {
+                  if (d[3] <= 1881586) {
+                      return "#00ff00";
+                  } else {
+                      return "#fd5c63";
+                  }
+              })
               .style("cursor", "pointer")
               .on("click", handlePointClick);
       }
 
       function handlePointClick(d) {
           d3.select("#min-nights").text("Minimum nights: " + d[2]);
-          d3.selectAll("circle").attr("fill", "#fd5c63")
-          d3.select(this).attr("fill", "black");
-          displayPriceOverYear();
+          d3.selectAll("circle").attr("stroke", "transparent")
+          d3.select(this).attr("stroke", "white").attr("stroke-width", "0.3px");
+          displayPriceOverYear(d);
       }
 
-      function displayPriceOverYear() {
-          var ctx = $("#line-chart");
-          var myChart = new Chart(ctx, {
-              type: 'line',
-              data: {
-                labels: ['Jan', '', 'Feb', '', 'Mar', '', 'Apr', '', 'May', '', 'Jun', '', 'Jul', '', 'Aug', '', 'Sept', '', 'Oct', '', 'Nov', '', 'Dec'],
-                datasets: [{
-                    label: "Price ($USD)",
-                    backgroundColor: "rgba(0,51,102,0.3)",
-                    strokeColor: "rgba(151,187,205,1)",
-                    pointColor: "rgba(151,187,205,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(151,187,205,1)",
-                    data: [12, 19, 3, 17, 6, 3, 7, 9, 4, 13, 5, 10, 12, 19, 3, 17, 6, 3, 7, 9, 4, 13, 5, 10]
-                }]
-             },
-            options : {
-                tooltips: {
-                    callbacks: {
-                        title: function() {}
-                    }
-                },
-                scales : {
-                    xAxes : [ {
-                        gridLines : {
-                            display : false
-                        }
-                    } ]
-                }
-            }
-          });
+      function displayPriceOverYear(d) {
+          let id = d[3];
+          var pricesOverMonths = pricesMap.get(id);
+
+          if (pricesOverMonths === undefined) {
+              document.getElementById("price-over-year-container").style.display = "none";
+          } else {
+              document.getElementById("price-over-year-container").style.display = "block";
+              var ctx = $("#line-chart");
+              let data = {
+                  labels: ['Jan', '', 'Feb', '', 'Mar', '', 'Apr', '', 'May', '', 'Jun', '', 'Jul', '', 'Aug', '', 'Sept', '', 'Oct', '', 'Nov', '', 'Dec'],
+                  datasets: [
+                      {
+                          label: "Price ($USD)",
+                          data: pricesOverMonths,
+                          backgroundColor: "rgba(0,51,102,0.3)",
+                          strokeColor: "rgba(151,187,205,1)",
+                          pointColor: "rgba(151,187,205,1)",
+                          pointStrokeColor: "#fff",
+                          pointHighlightFill: "#fff",
+                          pointHighlightStroke: "rgba(151,187,205,1)"
+                      }
+                  ]
+              };
+              let options = {
+                  tooltips: {
+                      callbacks: {
+                          title: function() {}
+                      }
+                  },
+                  scales : {
+                      xAxes : [ {
+                          gridLines : {
+                              display : false
+                          }
+                      } ],
+                      yAxes: [{
+                          ticks: {
+                              beginAtZero: true
+                          }
+                      }]
+                  }
+              };
+              var myChart = new Chart(ctx, {
+                  type: 'line',
+                  data: data,
+                  options: options
+              });
+          }
       }
 
     $('svg path').tipsy({
