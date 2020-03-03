@@ -3,14 +3,16 @@ const mapWidth = 640;
 const mapHeight = 600;
 let minNumListings = 10;
 let maxNumListings = 500;
-const colorPalette = ['#d3d3d3','#f5ad49','#e08984','#bf809b','#776399', '#5374a6'];
+const colorPalette = ['#d3d3d3','#e08984','#bf809b','#65c1cf','#5374a6', '#776399'];
 const neighborhoods = require('../data/neighbourhoods.geo.json');
-const neighborhoodMap = d3.map();
+//let neighborhoodMap = d3.map();
 let neighborhoodListings = d3.map();
 var active = d3.select(null);
 
-class MapVis {
+class MapVis extends null{
   constructor() {
+    super();
+    var self = this;
       d3.csv("listings_small.csv")
         .then((data) => {
             data.forEach(function(d) {
@@ -25,11 +27,27 @@ class MapVis {
                 }
             });
         });
+        const neighborhoodCt = d3.csv("num_listings_ny.csv").then(getNeighborhoodCounts);
+        neighborhoodCt.then(function(value){
+          self.drawMap(value);
+        });
+        function getNeighborhoodCounts(data) {
+          console.log("starting mapping...");
+          var neighborhoodMap = d3.map();
+          data.forEach((d) => {
+            neighborhoodMap.set(d.neighborhood, d.num_listings);
+          })
+          var noListings = ["Glen Oaks", "Hollis Hills", "Port Ivory", "Bloomfield", "Chelsea, Staten Island", "Charleston", "Pleasant Plains"]
+          noListings.forEach(function(d) {
+            neighborhoodMap.set(d, 0);
+          })
+          return neighborhoodMap;
+        }
+
   }
 
-  drawMap() {
-    this.getNeighborhoodCounts();
-    var colorScale = d3.scaleQuantize().domain([minNumListings,maxNumListings]).range(colorPalette);
+  drawMap(neighborhoodCt) {
+    var colorScale = d3.scaleQuantize().domain([minNumListings,maxNumListings]).range(d3.schemePurples[5]);
     d3.select("#map-svg").append("rect")
         .attr("class", "background")
         .attr("width", mapWidth)
@@ -56,8 +74,8 @@ class MapVis {
         return d.properties.neighbourhood_group; // borough name
       })
       .style("fill", function(d) {
-        return colorScale(0);
-        //return colorScale(neighborhoodMap.get(d.properties.neighbourhood));
+        //return colorScale(0);
+        return colorScale(neighborhoodCt.get(d.properties.neighbourhood));
       })
       .style("stroke", "#ffffff") // set outline to be white
       .on("mouseover", handleMouseOver)
@@ -76,7 +94,7 @@ class MapVis {
       function handleMouseOut(d) {
         // d3.select(this).style("fill", "D3D3D3").style("cursor", "default");
         d3.select(this).style("fill", () => {
-          return colorScale(neighborhoodMap.get(this.id));
+          return colorScale(neighborhoodCt.get(this.id));
         });
         d3.select("#selection").text("Neighborhood: none selected, Borough: none selected");
       }
@@ -148,6 +166,7 @@ class MapVis {
       }
 
       function handlePointClick(d) {
+          d3.select("#selection").text("Neighborhood: " + d.id);
           d3.select("#min-nights").text("Minimum nights: " + d[2]);
           d3.selectAll("circle").attr("fill", "#fd5c63")
           d3.select(this).attr("fill", "black");
@@ -195,26 +214,11 @@ class MapVis {
           var d = this.__data__;
           return 'Neighborhood: ' + this.id + '<br>' +
                  'Borough: ' + d.properties.neighbourhood_group +
-                 '<br> Number of listings: ' + neighborhoodMap.get(this.id);
+                 '<br> Number of listings: ' + neighborhoodCt.get(this.id);
       }
     });
   }
 
-  getNeighborhoodCounts() {
-    console.log("starting mapping...");
-    d3.csv("listings_small.csv")
-        .then((data) => {
-            data.forEach(function(d) {
-                let key = d.neighbourhood;
-                if (neighborhoodMap.has(key)) {
-                  var value = neighborhoodMap.get(key);
-                  neighborhoodMap.set(key, value + 1);
-                } else {
-                  neighborhoodMap.set(key, 1);
-                }
-            });
-    });
-  }
 }
 
 module.exports = MapVis;
