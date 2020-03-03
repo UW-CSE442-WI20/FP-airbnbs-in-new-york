@@ -1,5 +1,6 @@
 const d3 = require('d3');
 
+const neighborhoodMap = d3.map();
 const propertyMap = d3.map();
 
 
@@ -10,6 +11,7 @@ class PieChartVis {
 
         //options
         var options = {
+            onClick: graphClickEvent,
             // onClick: function(evt, item) {
             //     console.log();
             // },
@@ -30,10 +32,36 @@ class PieChartVis {
                 }
             }
         };
-        // return chart;
+
+        function graphClickEvent(event, item) {
+            var neighborhood = this.data.labels[item[0]._index];
+            console.log("starting ranked bar map...");
+            d3.csv("listings_small.csv")
+                .then((data) => {
+                    data.forEach(function (d) {
+                        if (d.neighbourhood_group == neighborhood) {
+                            let key = d.property_type;
+                            if (propertyMap.has(key)) {
+                                var value = propertyMap.get(key);
+                                propertyMap.set(key, value + 1);
+                            } else {
+                                propertyMap.set(key, 1);
+                            }
+                        }
+                    });
+               });
+               console.log(propertyMap);
+            }
+
+
         return this.setDoughnutChartData(context, options);
     }
 
+
+
+    // create 5 maps for each borough
+    //key : property type
+    // value: count
 
     // HELPER FUNCTION TO INITALIZE THE DATA
     setDoughnutChartData(context, options) {
@@ -42,30 +70,30 @@ class PieChartVis {
             .then((data) => {
                 data.forEach(function (d) {
                     let key = d.neighbourhood_group;
-                    if (propertyMap.has(key)) {
-                        var value = propertyMap.get(key);
-                        propertyMap.set(key, value + 1);
+                    if (neighborhoodMap.has(key)) {
+                        var value = neighborhoodMap.get(key);
+                        neighborhoodMap.set(key, value + 1);
                     } else {
-                        propertyMap.set(key, 1);
+                        neighborhoodMap.set(key, 1);
                     }
                 });
 
                 // debugging prints
-                colors = generateColorArray(propertyMap.keys().length);
+                colors = generateColorArray(neighborhoodMap.keys().length);
                 
 
                 // this.debuggingPrints();
 
                 //doughnut chart data
                 let chartData = {
-                    labels: propertyMap.keys(),
+                    labels: neighborhoodMap.keys(),
                     datasets: [
                         {
                             label: "TeamA Score",
-                            data: propertyMap.values(),
+                            data: neighborhoodMap.values(),
                             backgroundColor: colors,
                             borderColor: colors,
-                            borderWidth: Array(propertyMap.keys().length).fill(1)
+                            borderWidth: Array(neighborhoodMap.keys().length).fill(1)
                         }
                     ]
                 };
@@ -77,9 +105,9 @@ class PieChartVis {
                     options: options
                 });
 
-                function onMouseover(e){
-                    alert("data");
-                }
+                // function onMouseover(e){
+                //     alert("data");
+                // }
 
                 // return chartData;
                 return chart;
@@ -101,10 +129,10 @@ class PieChartVis {
 
     // Helper method : debugg prints
     debuggingPrints() {
-        console.log("keys : " + propertyMap.keys());
-        console.log("keys length : " + propertyMap.keys().length);
-        console.log("values : " + propertyMap.values());
-        console.log("values length : " + propertyMap.values().length);
+        console.log("keys : " + neighborhoodMap.keys());
+        console.log("keys length : " + neighborhoodMap.keys().length);
+        console.log("values : " + neighborhoodMap.values());
+        console.log("values length : " + neighborhoodMap.values().length);
     }
 
 
