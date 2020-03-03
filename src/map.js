@@ -118,12 +118,11 @@ class MapVis extends null{
               scale = 0.5 / Math.max(dx / mapWidth, dy / mapHeight),
               translate = [mapWidth / 2 - scale * x, mapHeight / 2 - scale * y];
 
+          drawListingPoints(this.id);
           d3.select("#map-svg").transition()
                 .duration(750)
                 .style("stroke-width", "0.5px")
                 .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
-
-          drawListingPoints(this.id);
       }
 
       function zoomed() {
@@ -143,26 +142,24 @@ class MapVis extends null{
             .remove();
       }
 
-      // bug where does not draw on first click from zoomed out map
       function drawListingPoints(id) {
           console.log(neighborhoodListings.get(id));
+          d3.select("#map-svg").selectAll("circle").remove();
           var circles = d3.select("#map-svg").selectAll("circle")
             .data(neighborhoodListings.get(id));
-          circles.enter().append("circle");
-          circles.exit().remove()
-          circles
-            .attr("cx", function (d) {
-                  let datum = [d[0], d[1]];
-                  return projection(datum)[0];
-              })
-          	.attr("cy", function (d) {
-                  let datum = [d[0], d[1]];
-                  return projection(datum)[1];
-              })
-          	.attr("r", "1px")
-          	.attr("fill", "#fd5c63")
-            .style("cursor", "pointer")
-            .on("click", handlePointClick);
+          circles.enter().append("circle")
+              .attr("cx", function (d) {
+                    let datum = [d[0], d[1]];
+                    return projection(datum)[0];
+                })
+              .attr("cy", function (d) {
+                    let datum = [d[0], d[1]];
+                    return projection(datum)[1];
+                })
+              .attr("r", "1px")
+              .attr("fill", "#fd5c63")
+              .style("cursor", "pointer")
+              .on("click", handlePointClick);
       }
 
       function handlePointClick(d) {
