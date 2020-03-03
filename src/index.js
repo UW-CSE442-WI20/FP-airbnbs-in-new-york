@@ -19,6 +19,24 @@ const pieChart = require('./piechart');
 //get the doughnut chart canvas
 var ctx1 = $("#doughnut-chartcanvas-1");
 const chart1 = new pieChart(ctx1);
+$("#doughnut-chartcanvas-1").on("click", handlePathClick);
+
+d3.select("#doughnut-chartcanvas-1").selectAll("borough")
+  .append("borough")
+  .attr("id", function(d) {
+    return d.properties.neighbourhood_group; // borough name
+  })
+  .on("mouseover", handleMouseOver)
+  .on("click", handlePathClick)
+
+  // Display the neighborhood and borough name on mouseover
+  function handleMouseOver(d) {
+    d3.select("#selection").text("Borough: " + d.properties.neighbourhood_group);
+  }
+  
+  function handlePathClick(d) {
+    // d3.select(this).style("outline", "none");
+  }
 
 var ctx2 = $("#doughnut-chartcanvas-2");
 //create Chart class object

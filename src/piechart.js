@@ -10,6 +10,9 @@ class PieChartVis {
 
         //options
         var options = {
+            // onClick: function(evt, item) {
+            //     console.log();
+            // },
             responsive: true,
             title: {
                 display: true,
@@ -27,8 +30,6 @@ class PieChartVis {
                 }
             }
         };
-
-
         // return chart;
         return this.setDoughnutChartData(context, options);
     }
@@ -40,8 +41,7 @@ class PieChartVis {
         d3.csv("listings_small.csv")
             .then((data) => {
                 data.forEach(function (d) {
-                    let key = d.property_type;
-                    // let key = d.room_type;
+                    let key = d.neighbourhood_group;
                     if (propertyMap.has(key)) {
                         var value = propertyMap.get(key);
                         propertyMap.set(key, value + 1);
@@ -52,24 +52,9 @@ class PieChartVis {
 
                 // debugging prints
                 colors = generateColorArray(propertyMap.keys().length);
+                
 
-                propertyMap.set("other", 0);
-                // iterate over propertyMap
-                for (let key of propertyMap.keys()) {
-                    let value = propertyMap.get(key);
-
-                    // console.log("key : " + key);
-                    // console.log("value : " + value);
-                    if (value < 100) {
-                        console.log("key : " + key + " value : " + value);
-                        propertyMap.remove(key);
-                        propertyMap.set("other", propertyMap.get("other") + value);
-                    }
-                }
-
-                                this.debuggingPrints();
-
-
+                // this.debuggingPrints();
 
                 //doughnut chart data
                 let chartData = {
@@ -91,6 +76,11 @@ class PieChartVis {
                     data: chartData,
                     options: options
                 });
+
+                function onMouseover(e){
+                    alert("data");
+                }
+
                 // return chartData;
                 return chart;
             });
