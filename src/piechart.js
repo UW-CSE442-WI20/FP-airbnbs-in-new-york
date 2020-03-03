@@ -35,7 +35,7 @@ class PieChartVis {
 
         function graphClickEvent(event, item) {
             var neighborhood = this.data.labels[item[0]._index];
-            console.log("starting ranked bar map...");
+            console.log("starting horizontal bar map...");
             d3.csv("listings_small.csv")
                 .then((data) => {
                     data.forEach(function (d) {
@@ -49,6 +49,9 @@ class PieChartVis {
                             }
                         }
                     });
+
+
+
                });
                console.log(propertyMap);
             }
@@ -105,11 +108,6 @@ class PieChartVis {
                     options: options
                 });
 
-                // function onMouseover(e){
-                //     alert("data");
-                // }
-
-                // return chartData;
                 return chart;
             });
 
@@ -134,11 +132,7 @@ class PieChartVis {
         console.log("values : " + neighborhoodMap.values());
         console.log("values length : " + neighborhoodMap.values().length);
     }
-
-
 }
-
-
 
 module.exports = PieChartVis;
 

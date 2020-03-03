@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>My Title</title>
+    <title>Airbnbs in New York</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.6.6/jquery.fullPage.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="./styles.css">
     <link rel="stylesheet" type="text/css" href="./tipsy.css">
@@ -22,10 +22,10 @@
   </head>
   <body>
       <div id="fullpage">
-          <div class="section">
+          <div class="section gray">
               <h1>Airbnbs in New York</h1>
           </div>
-          <div class="section gray">
+          <div class="section">
             <p></p>
             <div class="box left">
                 <svg width="640" height="600">
@@ -33,14 +33,19 @@
                 </svg>
             </div>
             <div class="box right">
-                <p id="selection"></p>
-                <p id="min-nights"></p>
+                <p id="value-range"></p>
+                <div id="slider-range"></div>
+                <div id="listing-info">
+                    <p id="selection"></p>
+                    <p id="total-listings"></p>
+                    <p id="min-nights"></p>
+                </div>
                 <div id="price-over-year-container">
                     <canvas id="line-chart" height="100" width="150"></canvas>
                 </div>
             </div>
           </div>
-          <div class="section">
+          <div class="section gray">
             <div class="chart-container">
               <div class="bar-chart-container">
                 <canvas id="barchart-chartcanvas-1"></canvas>
@@ -53,7 +58,7 @@
               </div>
             </div>
           </div>
-          <div class="section gray">
+          <div class="section">
 
             <p></p>
             <!-- <svg width = "600" height = "600" id = "piechart-svg"></svg> -->

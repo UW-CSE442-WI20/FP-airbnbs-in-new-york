@@ -10,8 +10,7 @@ myClassInstance.sayHi();
 
 // Draw map
 const MapVis = require('./map');
-const myMap = new MapVis();
-myMap.drawMap();
+const myMap = new MapVis("New York");
 
 // draw pie chart
 const pieChart = require('./piechart');
@@ -66,8 +65,7 @@ var ctx2 = $("#doughnut-chartcanvas-2");
 const chart2 = new pieChart(ctx2);
 
 
-// listings csv includes id, name, host_id, host_name, neighbourhood_group, neigbhorhood,
-
+// listings csv includes id, name, host_id, host_name, neighbourhood_group, neigbourhood,
 // latitude, longitude, room_type, price, minimum_nights, number_of_reviews, last_review,
 // reviews_per_month, calculated_host_listings_count, property_type, guests_included, amenities
 // d3.csv("listings_small.csv")
@@ -78,5 +76,7 @@ const chart2 = new pieChart(ctx2);
 $('#fullpage').fullpage({
   anchors: ['firstPage', 'secondPage', 'thirdPage', 'fourthPage'],
   navigation: true,
-  navigationPosition: 'right'
+  navigationPosition: 'right',
+  verticallyCentered: false,
+  navigationTooltips: ['Home', 'Map of New York', 'Guests', 'Property Types']
 });

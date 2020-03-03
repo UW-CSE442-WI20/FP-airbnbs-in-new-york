@@ -6,6 +6,10 @@ body {
 	text-align:center;
 }
 
+#fp-nav ul li .fp-tooltip {
+    color: black;
+}
+
 .gray {
     background-color: whitesmoke;
 }
@@ -32,6 +36,10 @@ body {
 
 .active {
     outline: none;
+}
+
+#listing-info {
+    margin-bottom: 30px;
 }
 
 #price-over-year-container {
