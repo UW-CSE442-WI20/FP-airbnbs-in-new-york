@@ -4,15 +4,22 @@ const mapHeight = 600;
 let minNumListings = 10;
 let maxNumListings = 500;
 const colorPalette = ['#d3d3d3', '#e08984', '#bf809b', '#65c1cf', '#5374a6', '#776399'];
-const neighborhoods = require('../data/neighbourhoods.geo.json');
+const neighborhoodsNYC = require('../data/neighbourhoods-nyc.geo.json');
+const neighborhoodsSeattle = require('../data/neighbourhoods-seattle.geo.json');
 let neighborhoodListings = d3.map();
 let pricesMap = d3.map();
 var active = d3.select(null);
 
 class MapVis {
-  constructor() {
+  constructor(city) {
     var self = this;
-    d3.csv("listings_small.csv")
+    var listings_csv = "listings_small.csv"; // New York by default
+    var calendar_csv = "calendar_nyc.csv";
+    if (city === "Seattle") {
+        listings_csv = "listings_seattle.csv";
+        // update calendar_csv
+    }
+    d3.csv(listings_csv)
       .then((data) => {
         data.forEach(function (d) {
           let point = [d.longitude, d.latitude, d.minimum_nights, d.id, d.neighbourhood];
@@ -26,7 +33,8 @@ class MapVis {
           }
         });
       });
-    d3.csv("calendar.csv")
+    console.log(neighborhoodListings);
+    d3.csv(calendar_csv)
       .then((data) => {
         data.forEach(function (d) {
           let id = d.listing_id;
@@ -45,7 +53,7 @@ class MapVis {
       });
     const neighborhoodCt = d3.csv("num_listings_ny.csv").then(getNeighborhoodCounts);
     neighborhoodCt.then(function (value) {
-      self.drawMap(value);
+      self.drawMap(city, value);
     });
     function getNeighborhoodCounts(data) {
       console.log("starting mapping...");
@@ -59,9 +67,9 @@ class MapVis {
       })
       return neighborhoodMap;
     }
-  }
+}
 
-  drawMap(neighborhoodCt) {
+  drawMap(city, neighborhoodCt) {
     var colorScale = d3.scaleQuantize().domain([minNumListings, maxNumListings]).range(d3.schemePurples[5]);
     d3.select("#map-svg").append("rect")
       .attr("class", "background")
@@ -69,10 +77,19 @@ class MapVis {
       .attr("height", mapHeight)
       .on("click", reset);
 
-    var projection = d3.geoMercator()
-      .center([-73.94, 40.70])
-      .scale(60000)
-      .translate([mapWidth / 2, mapHeight / 2]);
+    let neighborhoods = neighborhoodsNYC;
+    if (city === "New York") {
+        var projection = d3.geoMercator()
+          .center([-73.94, 40.70])
+          .scale(60000)
+          .translate([mapWidth / 2, mapHeight / 2]);
+    } else if (city == "Seattle") {
+        var projection = d3.geoMercator()
+          .center([-122.33, 47.61])
+          .scale(90000)
+          .translate([mapWidth / 2, mapHeight / 2]);
+        neighborhoods = neighborhoodsSeattle;
+    }
     var geoPath = d3.geoPath().projection(projection);
 
     var g = d3.select("map-svg").append("g");
