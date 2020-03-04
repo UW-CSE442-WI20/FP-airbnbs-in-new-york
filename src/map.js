@@ -80,10 +80,6 @@ class MapVis {
       data.forEach((d) => {
         neighborhoodMap.set(d.neighborhood, d.num_listings);
       })
-      /* var noListings = ["Glen Oaks", "Hollis Hills", "Port Ivory", "Bloomfield", "Chelsea, Staten Island", "Charleston", "Pleasant Plains"]
-      noListings.forEach(function (d) {
-        neighborhoodMap.set(d, 0);
-      }) */
       minNumListings = d3.min(neighborhoodMap.values());
       maxNumListings = d3.max(neighborhoodMap.values());
       return neighborhoodMap;
@@ -166,10 +162,7 @@ class MapVis {
     // Reset the visual to default fill on mouseout
     function handleMouseOut(d) {
       d3.select(this).style("fill", () => {
-        var numlistings = neighborhoodCt.get(this.id);
-        if (numlistings == undefined) {
-          return colorScale(0);
-        }
+        var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
         return colorScale(numlistings);
       });
       //d3.select("#selection").text("Neighborhood: none selected, Borough: none selected");
