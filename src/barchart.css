@@ -1,5 +1,10 @@
+  .chart-container-r1 {
+    width: 80%;
+    height: 80%;
+    margin: auto;
+  }
  .bar-chart-container {
-    height: 360px;
-    width: 360px;
+    height: 250px;
+    width: 380px;
     float: left;
   }

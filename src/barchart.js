@@ -21,6 +21,27 @@ honolulucount.then(function(value) {
     makeChart(value, ctx3, name3);
 });
 
+var ctx4 = document.getElementById('barchart-chartcanvas-4');
+var name4 = 'San Franciso';
+const sfcount = d3.csv("listings_small_sf.csv").then(processData);
+sfcount.then(function(value) {
+    makeChart(value, ctx4, name4);
+});
+
+var ctx5 = document.getElementById('barchart-chartcanvas-5');
+var name5 = 'New Orleans';
+const nolacount = d3.csv("listings_small_nola.csv").then(processData);
+nolacount.then(function(value) {
+    makeChart(value, ctx5, name5);
+});
+
+var ctx6 = document.getElementById('barchart-chartcanvas-6');
+var name6 = 'Austin';
+const austincount = d3.csv("listings_small_austin.csv").then(processData);
+austincount.then(function(value) {
+    makeChart(value, ctx6, name6);
+});
+
 function processData (data) {
   var nyCount = new Array(0, 0, 0, 0, 0, 0);
     data.forEach(function(d) {
@@ -65,7 +86,8 @@ function makeChart(count, ctx, name) {
             scales: {
                 yAxes: [{
                     ticks: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        suggestedMax: 40000
                     }
                 }]
             }
