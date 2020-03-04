@@ -18,19 +18,25 @@ class MapVis {
     var self = this;
     var listings_csv = "listings_small.csv"; // New York by default
     var calendar_csv = "calendar_nyc.csv";
+    var numlistings_csv = "num_listings_ny.csv";
     if (city === "Seattle") {
         listings_csv = "listings_seattle.csv";
+        numlistings_csv = "num_listings_seattle.csv"
         // update calendar_csv
     } else if (city === "Austin") {
         listings_csv = "listings_small_austin.csv";
+        numlistings_csv = "num_listings_austin.csv"
         // update calendar.csv
     } else if (city === "San Francisco") {
         listings_csv = "listings_small_sf.csv";
+        numlistings_csv = "num_listings_sf.csv"
         // update calendar.csv
     } else if (city === "New Orleans") {
         listings_csv = "listings_small_nola.csv";
+        numlistings_csv = "num_listings_nola.csv"
         // update calendar.csv
     }
+    d3.select("#city-name").text("Map of the Airbnbs in " + city).style("font-weight", "bold");
     d3.csv(listings_csv)
       .then((data) => {
         data.forEach(function (d) {
@@ -63,7 +69,8 @@ class MapVis {
           }
         });
       });
-    const neighborhoodCt = d3.csv("num_listings_ny.csv").then(getNeighborhoodCounts);
+    
+    const neighborhoodCt = d3.csv(numlistings_csv).then(getNeighborhoodCounts);
     neighborhoodCt.then(function (value) {
       self.drawMap(city, value);
     });
@@ -73,10 +80,12 @@ class MapVis {
       data.forEach((d) => {
         neighborhoodMap.set(d.neighborhood, d.num_listings);
       })
-      var noListings = ["Glen Oaks", "Hollis Hills", "Port Ivory", "Bloomfield", "Chelsea, Staten Island", "Charleston", "Pleasant Plains"]
+      /* var noListings = ["Glen Oaks", "Hollis Hills", "Port Ivory", "Bloomfield", "Chelsea, Staten Island", "Charleston", "Pleasant Plains"]
       noListings.forEach(function (d) {
         neighborhoodMap.set(d, 0);
-      })
+      }) */
+      minNumListings = d3.min(neighborhoodMap.values());
+      maxNumListings = d3.max(neighborhoodMap.values());
       return neighborhoodMap;
     }
 }
@@ -136,7 +145,8 @@ class MapVis {
         return d.properties.neighbourhood_group; // borough name
       })
       .style("fill", function (d) {
-        return colorScale(neighborhoodCt.get(d.properties.neighbourhood));
+        var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
+        return colorScale(numlistings);
       })
       .style("stroke", "#d3d3d3") // set outline to be gray
       .on("mouseover", handleMouseOver)
@@ -145,17 +155,22 @@ class MapVis {
 
     // Display the neighborhood and borough name on mouseover
     function handleMouseOver(d) {
+      var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
       d3.select(this)
         .style("fill", "#E9A553")
         .style("cursor", "pointer");
       d3.select("#selection").text("Neighborhood: " + this.id + ", Borough: " + d.properties.neighbourhood_group);
-      d3.select("#total-listings").text("Total number of listings in this neighborhood: " + neighborhoodCt.get(d.properties.neighbourhood));
+      d3.select("#total-listings").text("Total number of listings in this neighborhood: " + numlistings);
     }
 
     // Reset the visual to default fill on mouseout
     function handleMouseOut(d) {
       d3.select(this).style("fill", () => {
-        return colorScale(neighborhoodCt.get(this.id));
+        var numlistings = neighborhoodCt.get(this.id);
+        if (numlistings == undefined) {
+          return colorScale(0);
+        }
+        return colorScale(numlistings);
       });
       //d3.select("#selection").text("Neighborhood: none selected, Borough: none selected");
     }
@@ -293,9 +308,10 @@ class MapVis {
       html: true,
       title: function () {
         var d = this.__data__;
+        var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
         return 'Neighborhood: ' + this.id + '<br>' +
           'Borough: ' + d.properties.neighbourhood_group +
-          '<br> Number of listings: ' + neighborhoodCt.get(this.id);
+          '<br> Number of listings: ' + numlistings;
       }
     });
   }
