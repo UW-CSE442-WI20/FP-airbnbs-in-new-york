@@ -22,20 +22,20 @@ class MapVis {
     var numlistings_csv = "num_listings_ny.csv";
     if (city === "Seattle") {
       listings_csv = "listings_seattle.csv";
-      numlistings_csv = "num_listings_seattle.csv"
-      // update calendar_csv
+      numlistings_csv = "num_listings_seattle.csv";
+      calendar_csv = "calendar_seattle.csv";
     } else if (city === "Austin") {
       listings_csv = "listings_small_austin.csv";
-      numlistings_csv = "num_listings_austin.csv"
-      // update calendar.csv
+      numlistings_csv = "num_listings_austin.csv";
+      calendar_csv = "calendar_austin.csv";
     } else if (city === "San Francisco") {
       listings_csv = "listings_small_sf.csv";
-      numlistings_csv = "num_listings_sf.csv"
-      // update calendar.csv
+      numlistings_csv = "num_listings_sf.csv";
+      calendar_csv = "calendar_sf.csv";
     } else if (city === "New Orleans") {
       listings_csv = "listings_small_nola.csv";
-      numlistings_csv = "num_listings_nola.csv"
-      // update calendar.csv
+      numlistings_csv = "num_listings_nola.csv";
+      calendar_csv = "calendar_nola.csv";
     }
     d3.select("#city-name").text("Map of the Airbnbs in " + city).style("font-weight", "bold");
     d3.csv(listings_csv)
@@ -196,7 +196,7 @@ class MapVis {
         .duration(750)
         .style("stroke-width", "0.5px")
         .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
-      
+
       showSlider(this.id);
     }
 
@@ -242,14 +242,25 @@ class MapVis {
           }
         })
         .style("cursor", "pointer")
+        .on("mouseover", handlePointMouseover)
+        .on("mouseout", handlePointMouseout)
         .on("click", handlePointClick);
+    }
+
+    function handlePointMouseover(d) {
+        d3.select(this).attr("stroke", "white").attr("stroke-width", "0.3px");
+    }
+
+    function handlePointMouseout(d) {
+        d3.select(this).attr("stroke", "transparent");
     }
 
     function handlePointClick(d) {
       d3.select("#selection").text("Neighborhood: " + d[4]);
       d3.select("#min-nights").text("Minimum nights: " + d[2]);
-      d3.selectAll("circle").attr("stroke", "transparent")
+      // d3.selectAll("circle").attr("stroke", "transparent");
       d3.select(this).attr("stroke", "white").attr("stroke-width", "0.3px");
+      // ignore mouseout
       displayPriceOverYear(d);
     }
 
