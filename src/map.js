@@ -13,31 +13,33 @@ const neighborhoodsNOLA = require('../data/neighbourhoods-nola.geo.json');
 let neighborhoodListings = d3.map();
 let pricesMap = d3.map();
 var active = d3.select(null);
+let city = "New York"; // default
 
 class MapVis {
   constructor(city) {
     var self = this;
+    this.city = city;
     var listings_csv = "listings_small.csv"; // New York by default
     var calendar_csv = "calendar_nyc.csv";
     var numlistings_csv = "num_listings_ny.csv";
-    if (city === "Seattle") {
+    if (this.city === "Seattle") {
       listings_csv = "listings_seattle.csv";
       numlistings_csv = "num_listings_seattle.csv";
       calendar_csv = "calendar_seattle.csv";
-    } else if (city === "Austin") {
+    } else if (this.city === "Austin") {
       listings_csv = "listings_small_austin.csv";
       numlistings_csv = "num_listings_austin.csv";
       calendar_csv = "calendar_austin.csv";
-    } else if (city === "San Francisco") {
+    } else if (this.city === "San Francisco") {
       listings_csv = "listings_small_sf.csv";
       numlistings_csv = "num_listings_sf.csv";
       calendar_csv = "calendar_sf.csv";
-    } else if (city === "New Orleans") {
+    } else if (this.city === "New Orleans") {
       listings_csv = "listings_small_nola.csv";
       numlistings_csv = "num_listings_nola.csv";
       calendar_csv = "calendar_nola.csv";
     }
-    d3.select("#city-name").text("Map of the Airbnbs in " + city).style("font-weight", "bold");
+    d3.select("#city-name").text("Map of the Airbnbs in " + this.city).style("font-weight", "bold");
     d3.csv(listings_csv)
       .then((data) => {
         data.forEach(function (d) {
@@ -52,7 +54,7 @@ class MapVis {
           }
         });
       });
-    console.log(neighborhoodListings);
+
     d3.csv(calendar_csv)
       .then((data) => {
         data.forEach(function (d) {
@@ -73,7 +75,7 @@ class MapVis {
 
     const neighborhoodCt = d3.csv(numlistings_csv).then(getNeighborhoodCounts);
     neighborhoodCt.then(function (value) {
-      self.drawMap(city, value);
+      self.drawMap(value);
     });
     function getNeighborhoodCounts(data) {
       console.log("starting mapping...");
@@ -87,7 +89,7 @@ class MapVis {
     }
   }
 
-  drawMap(city, neighborhoodCt) {
+  drawMap(neighborhoodCt) {
     var colorScale = d3.scaleQuantize().domain([minNumListings, maxNumListings]).range(d3.schemePurples[5]);
     //var legend = d3.legend.color().scale(colorScale);
     //d3.select("#map-svg").append("g").attr("transform", "translate(352, 60)").call(colorLegend);
@@ -103,25 +105,25 @@ class MapVis {
       .center([-73.94, 40.70])
       .scale(60000)
       .translate([mapWidth / 2, mapHeight / 2]);
-    if (city == "Seattle") {
+    if (this.city == "Seattle") {
       var projection = d3.geoMercator()
         .center([-122.33, 47.61])
         .scale(90000)
         .translate([mapWidth / 2, mapHeight / 2]);
       neighborhoods = neighborhoodsSeattle;
-    } else if (city == "Austin") {
+    } else if (this.city == "Austin") {
       var projection = d3.geoMercator()
         .center([-97.7559964, 30.3071816])
         .scale(50000)
         .translate([mapWidth / 2, mapHeight / 2]);
       neighborhoods = neighborhoodsAustin;
-    } else if (city == "San Francisco") {
+    } else if (this.city == "San Francisco") {
       var projection = d3.geoMercator()
         .center([-122.433701, 37.767683])
         .scale(150000)
         .translate([mapWidth / 2, mapHeight / 2]);
       neighborhoods = neighborhoodsSF;
-    } else if (city == "New Orleans") {
+    } else if (this.city == "New Orleans") {
       var projection = d3.geoMercator()
         .center([-89.92697, 30.03979])
         .scale(60000)
@@ -235,11 +237,14 @@ class MapVis {
         .attr("r", "0.7px")
         .attr("fill", function (d) {
           // TODO: fix for different cities
-          if (d[3] <= 1881586) {
-            return "#00ff00";
-          } else {
-            return "#fd5c63";
+          if (this.city == "New York") {
+              if (d[3] <= 1881586) {
+                return "#00ff00";
+              } else {
+                return "#fd5c63";
+              }
           }
+          return "#00ff00";
         })
         .style("cursor", "pointer")
         .on("mouseover", handlePointMouseover)
@@ -248,11 +253,11 @@ class MapVis {
     }
 
     function handlePointMouseover(d) {
-        d3.select(this).classed("active-point", true);
+        d3.select(this).attr("stroke", "white").attr("stroke-width", "0.3px");
     }
 
     function handlePointMouseout(d) {
-        d3.select(this).classed("active-point", false);
+        d3.select(this).attr("stroke", "transparent");
     }
 
     function handlePointClick(d) {
