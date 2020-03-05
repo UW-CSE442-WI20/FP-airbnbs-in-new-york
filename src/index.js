@@ -20,8 +20,8 @@ var ctx1 = $("#doughnut-chartcanvas-1");
 const chart1 = new pieChart(ctx1);
 
 
-// var canvas = document.getElementById("doughnut-chartcanvas-1");
-// var ctx = canvas.getContext("2d");
+var canvas = document.getElementById("doughnut-chartcanvas-1");
+var ctx = canvas.getContext("2d");
 
 
 // ctx1.onclick = function(evt) {

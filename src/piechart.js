@@ -1,9 +1,6 @@
 const d3 = require('d3');
 
 const neighborhoodMap = d3.map();
-const propertyMap = d3.map();
-
-
 class PieChartVis {
 
 
@@ -12,9 +9,6 @@ class PieChartVis {
         //options
         var options = {
             onClick: graphClickEvent,
-            // onClick: function(evt, item) {
-            //     console.log();
-            // },
             responsive: true,
             title: {
                 display: true,
@@ -36,6 +30,7 @@ class PieChartVis {
         function graphClickEvent(event, item) {
             var neighborhood = this.data.labels[item[0]._index];
             console.log("starting horizontal bar map...");
+            const propertyMap = d3.map();
             d3.csv("listings_small.csv")
                 .then((data) => {
                     data.forEach(function (d) {
@@ -49,15 +44,34 @@ class PieChartVis {
                             }
                         }
                     });
-
-
-
                });
-               console.log(propertyMap);
+               this.createBarChart(propertyMap);               
             }
+            return this.setDoughnutChartData(context, options);
+        }
 
-
-        return this.setDoughnutChartData(context, options);
+    createBarChart(propertyMap) {
+        new Chart(document.getElementById("bar-chart-horizontal"),
+        {
+            type: 'horizontalBar',
+            data: {
+              labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
+              datasets: [
+                {
+                  label: "Population (millions)",
+                  backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+                  data: [2478,5267,734,784,433]
+                }
+              ]
+            },
+            options: {
+              legend: { display: false },
+              title: {
+                display: true,
+                text: 'Predicted world population (millions) in 2050'
+              }
+            }
+        });
     }
 
 
@@ -83,7 +97,6 @@ class PieChartVis {
 
                 // debugging prints
                 colors = generateColorArray(neighborhoodMap.keys().length);
-                
 
                 // this.debuggingPrints();
 
