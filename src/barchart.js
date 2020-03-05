@@ -1,5 +1,8 @@
 const d3 = require('d3');
 
+var highlighted = null;
+var selectedCity = 'New York';
+
 var ctx1 = document.getElementById('barchart-chartcanvas-1');
 var name1 = 'New York';
 const nycount = d3.csv("listings_small.csv").then(processData);
@@ -61,7 +64,7 @@ function makeChart(count, ctx, name) {
         data: {
             labels: ['1' , '2', '3', '4', '5', '6+'],
             datasets: [{
-                label: name,
+                label: '',
                 data: count,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
@@ -83,6 +86,15 @@ function makeChart(count, ctx, name) {
             }]
         },
         options: {
+            title: {
+                display: true,
+                fontColor: '#000',
+                fontSize: 16,
+                text: name
+            },
+            legend: {
+                display: false
+            },
             scales: {
                 yAxes: [{
                     ticks: {
@@ -90,6 +102,18 @@ function makeChart(count, ctx, name) {
                         suggestedMax: 40000
                     }
                 }]
+            },
+            events: ['click'],
+            
+            onClick:  (evt, item) => { 
+               if(highlighted != null){
+                    highlighted.options.title.fontColor= '#000';
+                    highlighted.update();
+               }
+                myChart.options.title.fontColor= '#00A699';
+                myChart.update();
+                highlighted = myChart;
+                selectedCity = myChart.options.title.text;
             }
         }
     });
