@@ -248,19 +248,18 @@ class MapVis {
     }
 
     function handlePointMouseover(d) {
-        d3.select(this).attr("stroke", "white").attr("stroke-width", "0.3px");
+        d3.select(this).classed("active-point", true);
     }
 
     function handlePointMouseout(d) {
-        d3.select(this).attr("stroke", "transparent");
+        d3.select(this).classed("active-point", false);
     }
 
     function handlePointClick(d) {
       d3.select("#selection").text("Neighborhood: " + d[4]);
       d3.select("#min-nights").text("Minimum nights: " + d[2]);
-      // d3.selectAll("circle").attr("stroke", "transparent");
-      d3.select(this).attr("stroke", "white").attr("stroke-width", "0.3px");
-      // ignore mouseout
+      d3.select(".active-point").classed("active-point", false);
+      d3.select(this).classed("active-point", true);
       displayPriceOverYear(d);
     }
 
