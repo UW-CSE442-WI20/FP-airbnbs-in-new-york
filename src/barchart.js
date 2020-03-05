@@ -25,7 +25,7 @@ honolulucount.then(function(value) {
 });
 
 var ctx4 = document.getElementById('barchart-chartcanvas-4');
-var name4 = 'San Franciso';
+var name4 = 'San Francisco';
 const sfcount = d3.csv("listings_small_sf.csv").then(processData);
 sfcount.then(function(value) {
     makeChart(value, ctx4, name4);
@@ -101,6 +101,11 @@ function makeChart(count, ctx, name) {
                         beginAtZero: true,
                         suggestedMax: 40000
                     }
+                }],
+                xAxes: [{
+                  gridLines: {
+                    display: false
+                  }
                 }]
             },
             events: ['click'],
