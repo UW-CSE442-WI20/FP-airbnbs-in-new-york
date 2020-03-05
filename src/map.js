@@ -76,6 +76,7 @@ class MapVis {
     const neighborhoodCt = d3.csv(numlistings_csv).then(getNeighborhoodCounts);
     neighborhoodCt.then(function (value) {
       self.drawMap(value);
+      console.log("drawing map")
     });
     function getNeighborhoodCounts(data) {
       console.log("starting mapping...");
@@ -90,6 +91,7 @@ class MapVis {
   }
 
   drawMap(neighborhoodCt) {
+    d3.selectAll("#map-svg > *").remove();
     var colorScale = d3.scaleQuantize().domain([minNumListings, maxNumListings]).range(d3.schemePurples[5]);
     //var legend = d3.legend.color().scale(colorScale);
     //d3.select("#map-svg").append("g").attr("transform", "translate(352, 60)").call(colorLegend);
@@ -236,7 +238,6 @@ class MapVis {
         })
         .attr("r", "0.7px")
         .attr("fill", function (d) {
-          // TODO: fix for different cities
           if (this.city == "New York") {
               if (d[3] <= 1881586) {
                 return "#00ff00";
