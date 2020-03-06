@@ -43,7 +43,7 @@ class MapVis {
     d3.csv(listings_csv)
       .then((data) => {
         data.forEach(function (d) {
-          let point = [d.longitude, d.latitude, d.minimum_nights, d.id, d.neighbourhood];
+          let point = [d.longitude, d.latitude, d.minimum_nights, d.id, d.neighbourhood, d.name, d.availability_365];
           let key = d.neighbourhood;
           if (neighborhoodListings.has(key)) {
             let currentListings = neighborhoodListings.get(key);
@@ -222,6 +222,8 @@ class MapVis {
         .remove();
       d3.select("#slider-range").select("svg").data([]).exit().remove();
       d3.select("#value-range").exit().remove();
+      d3.select("#listing-avail").select("svg").data([]).exit().remove();
+      d3.selectAll("p").remove();
     }
 
     function drawListingPoints(inputdata) {
@@ -240,11 +242,11 @@ class MapVis {
         .attr("r", "0.7px")
         .attr("fill", function (d) {
           if (currentCity === "New York") {
-              if (d[3] <= 1881586) {
-                return "#00ff00";
-              } else {
-                return "#fd5c63";
-              }
+            if (d[3] <= 1881586) {
+              return "#00ff00";
+            } else {
+              return "#fd5c63";
+            }
           }
           return "#00ff00";
         })
@@ -255,19 +257,58 @@ class MapVis {
     }
 
     function handlePointMouseover(d) {
-        d3.select(this).attr("stroke", "white").attr("stroke-width", "0.3px");
+      d3.select(this).attr("stroke", "white").attr("stroke-width", "0.3px");
     }
 
     function handlePointMouseout(d) {
-        d3.select(this).attr("stroke", "transparent");
+      d3.select(this).attr("stroke", "transparent");
     }
 
     function handlePointClick(d) {
-      d3.select("#selection").text("Neighborhood: " + d[4]);
-      d3.select("#min-nights").text("Minimum nights: " + d[2]);
+      // remove old point data
+      d3.select("#listing-avail").select("svg").data([]).exit().remove();
+      d3.selectAll("p").remove();
+      // add new point data
+      var listingDiv = d3.select("#listing-info");
+      listingDiv.append("p").text("Neighborhood: " + d[4]);
+      listingDiv.append("p").text("Minimum nights: " + d[2]);
+      listingDiv.append("p").text("Listing name: " + d[5]);
       d3.select(".active-point").classed("active-point", false);
       d3.select(this).classed("active-point", true);
+      showAvailability(d[6]);
       displayPriceOverYear(d);
+    }
+
+    function showAvailability(avail) {
+      d3.select("#listing-avail").append("p").text("Listing availability out of the year: " + avail);
+      var colorScale = d3.scaleLinear().domain([0, 365]).range(["yellow", "green"]);
+      var svg = d3.select("#listing-avail").append('svg')
+        .attr("height", 50)
+        .attr("width", 500)
+        .attr('transform', 'translate(70,30)');
+      svg.append('rect')
+        .attr('class', 'bg-rect')
+        .attr('rx', 10)
+        .attr('ry', 10)
+        .attr('fill', 'gray')
+        .attr('height', 15)
+        .attr('width', 365)
+        .attr('x', 0);
+      var progress = svg.append('rect')
+        .attr('class', 'progress-rect')
+        .attr('fill', function () {
+          return colorScale(avail);
+        })
+        .attr('height', 15)
+        .attr('width', 0)
+        .attr('rx', 10)
+        .attr('ry', 10)
+        .attr('x', 0);
+
+      progress.transition()
+        .duration(1000)
+        .attr('width', avail);
+
     }
 
     function displayPriceOverYear(d) {
@@ -351,7 +392,7 @@ class MapVis {
           // draw new points
           drawListingPoints(filteredPoints);
           d3.select('p#value-range')
-          .text("Minimum nights filter: " + f(val[0]) + "-" + f(val[1]) + " nights");
+            .text("Minimum nights filter: " + f(val[0]) + "-" + f(val[1]) + " nights");
         });
 
       var gRange = d3
