@@ -224,6 +224,7 @@ class MapVis {
       d3.select("#value-range").exit().remove();
       d3.select("#listing-avail").select("svg").data([]).exit().remove();
       d3.selectAll("p").remove();
+      document.getElementById("price-over-year-container").style.display = "none";
     }
 
     function drawListingPoints(inputdata) {
