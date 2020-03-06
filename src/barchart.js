@@ -1,4 +1,5 @@
 const d3 = require('d3');
+const MapVis = require('./map');
 
 var highlighted = null;
 var selectedCity = 'New York';
@@ -109,8 +110,8 @@ function makeChart(count, ctx, name) {
                 }]
             },
             events: ['click'],
-            
-            onClick:  (evt, item) => { 
+
+            onClick:  (evt, item) => {
                if(highlighted != null){
                     highlighted.options.title.fontColor= '#000';
                     highlighted.update();
@@ -119,6 +120,7 @@ function makeChart(count, ctx, name) {
                 myChart.update();
                 highlighted = myChart;
                 selectedCity = myChart.options.title.text;
+                var myMap = new MapVis(selectedCity);
             }
         }
     });

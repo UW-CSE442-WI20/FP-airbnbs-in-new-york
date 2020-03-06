@@ -55,7 +55,7 @@ var ctx = canvas.getContext("2d");
 //   function handleMouseOver(d) {
 //     d3.select("#selection").text("Borough: " + d.properties.neighbourhood_group);
 //   }
-  
+
 //   function handlePathClick(d) {
 //     // d3.select(this).style("outline", "none");
 //   }
@@ -78,5 +78,5 @@ $('#fullpage').fullpage({
   navigation: true,
   navigationPosition: 'right',
   verticallyCentered: false,
-  navigationTooltips: ['Home', 'Map of New York', 'Guests', 'Property Types']
+  navigationTooltips: ['Home', 'Select a City', 'Map of New York', 'Property Types']
 });

@@ -38,6 +38,11 @@ body {
     outline: none;
 }
 
+.active-point {
+    stroke: white;
+    stroke-width: 0.3px;
+}
+
 #listing-info {
     margin-bottom: 30px;
 }
