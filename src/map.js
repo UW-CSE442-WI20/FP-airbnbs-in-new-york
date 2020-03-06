@@ -133,6 +133,7 @@ class MapVis {
       neighborhoods = neighborhoodsNOLA;
     }
     var geoPath = d3.geoPath().projection(projection);
+    var currentCity = this.city;
 
     var g = d3.select("map-svg").append("g");
 
@@ -238,7 +239,7 @@ class MapVis {
         })
         .attr("r", "0.7px")
         .attr("fill", function (d) {
-          if (this.city == "New York") {
+          if (currentCity === "New York") {
               if (d[3] <= 1881586) {
                 return "#00ff00";
               } else {
@@ -333,7 +334,7 @@ class MapVis {
         .sliderBottom()
         .min(min)
         .max(max)
-        .width(300)
+        .width(360)
         .tickFormat(f)
         .ticks(10)
         .default([min, max])
