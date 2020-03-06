@@ -78,5 +78,5 @@ $('#fullpage').fullpage({
   navigation: true,
   navigationPosition: 'right',
   verticallyCentered: false,
-  navigationTooltips: ['Home', 'Select a City', 'Map of New York', 'Property Types']
+  navigationTooltips: ['Home', 'Select a City', 'Map of Listings', 'Property Types']
 });
