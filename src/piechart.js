@@ -1,4 +1,6 @@
 const d3 = require('d3');
+// export class HorizontalBarChart {...}
+let HorizontalBarChart = require('./horizontalbarchart');
 
 const neighborhoodMap = d3.map();
 class PieChartVis {
@@ -27,55 +29,35 @@ class PieChartVis {
             }
         };
 
-        function graphClickEvent(event, item) {
-            var neighborhood = this.data.labels[item[0]._index];
-            console.log("starting horizontal bar map...");
-            const propertyMap = d3.map();
-            d3.csv("listings_small.csv")
-                .then((data) => {
-                    data.forEach(function (d) {
-                        if (d.neighbourhood_group == neighborhood) {
-                            let key = d.property_type;
-                            if (propertyMap.has(key)) {
-                                var value = propertyMap.get(key);
-                                propertyMap.set(key, value + 1);
-                            } else {
-                                propertyMap.set(key, 1);
+            function graphClickEvent(event, item) {
+                var neighborhood = this.data.labels[item[0]._index];
+                // console.log("neighborhood : " + neighborhood);
+                console.log("starting horizontal bar map...");
+                const propertyMap = d3.map();
+                d3.csv("listings_small.csv")
+                    .then((data) => {
+                        data.forEach(function (d) {
+                            if (d.neighbourhood_group == neighborhood) {
+                                let key = d.property_type;
+                                if (propertyMap.has(key)) {
+                                    var value = propertyMap.get(key);
+                                    propertyMap.set(key, value + 1);
+                                } else {
+                                    propertyMap.set(key, 1);
+                                }
                             }
-                        }
+                        });
+                        
+                        var ctx  = $("#horizontal-bar-chart-canvas");
+                        const horizontalBarChart = new HorizontalBarChart(ctx, propertyMap);
                     });
-               });
-               this.createBarChart(propertyMap);               
-            }
+            };
+
             return this.setDoughnutChartData(context, options);
         }
 
-    createBarChart(propertyMap) {
-        new Chart(document.getElementById("bar-chart-horizontal"),
-        {
-            type: 'horizontalBar',
-            data: {
-              labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
-              datasets: [
-                {
-                  label: "Population (millions)",
-                  backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-                  data: [2478,5267,734,784,433]
-                }
-              ]
-            },
-            options: {
-              legend: { display: false },
-              title: {
-                display: true,
-                text: 'Predicted world population (millions) in 2050'
-              }
-            }
-        });
-    }
 
-
-
+  
     // create 5 maps for each borough
     //key : property type
     // value: count

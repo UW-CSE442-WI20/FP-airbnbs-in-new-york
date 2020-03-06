@@ -1,4 +1,5 @@
 const d3 = require('d3')
+const simpleslider = require('d3-simple-slider')
 const mapWidth = 640;
 const mapHeight = 600;
 let minNumListings = 10;
@@ -18,19 +19,25 @@ class MapVis {
     var self = this;
     var listings_csv = "listings_small.csv"; // New York by default
     var calendar_csv = "calendar_nyc.csv";
+    var numlistings_csv = "num_listings_ny.csv";
     if (city === "Seattle") {
-        listings_csv = "listings_seattle.csv";
-        // update calendar_csv
+      listings_csv = "listings_seattle.csv";
+      numlistings_csv = "num_listings_seattle.csv"
+      // update calendar_csv
     } else if (city === "Austin") {
-        listings_csv = "listings_small_austin.csv";
-        // update calendar.csv
+      listings_csv = "listings_small_austin.csv";
+      numlistings_csv = "num_listings_austin.csv"
+      // update calendar.csv
     } else if (city === "San Francisco") {
-        listings_csv = "listings_small_sf.csv";
-        // update calendar.csv
+      listings_csv = "listings_small_sf.csv";
+      numlistings_csv = "num_listings_sf.csv"
+      // update calendar.csv
     } else if (city === "New Orleans") {
-        listings_csv = "listings_small_nola.csv";
-        // update calendar.csv
+      listings_csv = "listings_small_nola.csv";
+      numlistings_csv = "num_listings_nola.csv"
+      // update calendar.csv
     }
+    d3.select("#city-name").text("Map of the Airbnbs in " + city).style("font-weight", "bold");
     d3.csv(listings_csv)
       .then((data) => {
         data.forEach(function (d) {
@@ -63,7 +70,8 @@ class MapVis {
           }
         });
       });
-    const neighborhoodCt = d3.csv("num_listings_ny.csv").then(getNeighborhoodCounts);
+
+    const neighborhoodCt = d3.csv(numlistings_csv).then(getNeighborhoodCounts);
     neighborhoodCt.then(function (value) {
       self.drawMap(city, value);
     });
@@ -73,16 +81,16 @@ class MapVis {
       data.forEach((d) => {
         neighborhoodMap.set(d.neighborhood, d.num_listings);
       })
-      var noListings = ["Glen Oaks", "Hollis Hills", "Port Ivory", "Bloomfield", "Chelsea, Staten Island", "Charleston", "Pleasant Plains"]
-      noListings.forEach(function (d) {
-        neighborhoodMap.set(d, 0);
-      })
+      minNumListings = d3.min(neighborhoodMap.values());
+      maxNumListings = d3.max(neighborhoodMap.values());
       return neighborhoodMap;
     }
-}
+  }
 
   drawMap(city, neighborhoodCt) {
     var colorScale = d3.scaleQuantize().domain([minNumListings, maxNumListings]).range(d3.schemePurples[5]);
+    //var legend = d3.legend.color().scale(colorScale);
+    //d3.select("#map-svg").append("g").attr("transform", "translate(352, 60)").call(colorLegend);
     d3.select("#map-svg").append("rect")
       .attr("class", "background")
       .attr("width", mapWidth)
@@ -96,29 +104,29 @@ class MapVis {
       .scale(60000)
       .translate([mapWidth / 2, mapHeight / 2]);
     if (city == "Seattle") {
-        var projection = d3.geoMercator()
-          .center([-122.33, 47.61])
-          .scale(90000)
-          .translate([mapWidth / 2, mapHeight / 2]);
-        neighborhoods = neighborhoodsSeattle;
+      var projection = d3.geoMercator()
+        .center([-122.33, 47.61])
+        .scale(90000)
+        .translate([mapWidth / 2, mapHeight / 2]);
+      neighborhoods = neighborhoodsSeattle;
     } else if (city == "Austin") {
-        var projection = d3.geoMercator()
-          .center([-97.7559964, 30.3071816])
-          .scale(50000)
-          .translate([mapWidth / 2, mapHeight / 2]);
-        neighborhoods = neighborhoodsAustin;
+      var projection = d3.geoMercator()
+        .center([-97.7559964, 30.3071816])
+        .scale(50000)
+        .translate([mapWidth / 2, mapHeight / 2]);
+      neighborhoods = neighborhoodsAustin;
     } else if (city == "San Francisco") {
-        var projection = d3.geoMercator()
-          .center([-122.433701, 37.767683])
-          .scale(150000)
-          .translate([mapWidth / 2, mapHeight / 2]);
-        neighborhoods = neighborhoodsSF;
+      var projection = d3.geoMercator()
+        .center([-122.433701, 37.767683])
+        .scale(150000)
+        .translate([mapWidth / 2, mapHeight / 2]);
+      neighborhoods = neighborhoodsSF;
     } else if (city == "New Orleans") {
-        var projection = d3.geoMercator()
-          .center([-89.92697, 30.03979])
-          .scale(60000)
-          .translate([mapWidth / 2, mapHeight / 2]);
-        neighborhoods = neighborhoodsNOLA;
+      var projection = d3.geoMercator()
+        .center([-89.92697, 30.03979])
+        .scale(60000)
+        .translate([mapWidth / 2, mapHeight / 2]);
+      neighborhoods = neighborhoodsNOLA;
     }
     var geoPath = d3.geoPath().projection(projection);
 
@@ -136,7 +144,8 @@ class MapVis {
         return d.properties.neighbourhood_group; // borough name
       })
       .style("fill", function (d) {
-        return colorScale(neighborhoodCt.get(d.properties.neighbourhood));
+        var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
+        return colorScale(numlistings);
       })
       .style("stroke", "#d3d3d3") // set outline to be gray
       .on("mouseover", handleMouseOver)
@@ -145,23 +154,26 @@ class MapVis {
 
     // Display the neighborhood and borough name on mouseover
     function handleMouseOver(d) {
+      var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
       d3.select(this)
         .style("fill", "#E9A553")
         .style("cursor", "pointer");
       d3.select("#selection").text("Neighborhood: " + this.id + ", Borough: " + d.properties.neighbourhood_group);
-      d3.select("#total-listings").text("Total number of listings in this neighborhood: " + neighborhoodCt.get(d.properties.neighbourhood));
+      d3.select("#total-listings").text("Total number of listings in this neighborhood: " + numlistings);
     }
 
     // Reset the visual to default fill on mouseout
     function handleMouseOut(d) {
       d3.select(this).style("fill", () => {
-        return colorScale(neighborhoodCt.get(this.id));
+        var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
+        return colorScale(numlistings);
       });
       //d3.select("#selection").text("Neighborhood: none selected, Borough: none selected");
     }
 
     function handlePathClick(d) {
       if (active.node() === this) return reset();
+      d3.select("#slider-range").select("svg").data([]).exit().remove();
       d3.select(this).style("outline", "none");
       active.classed("active", false);
       active = d3.select(this).classed("active", true);
@@ -179,11 +191,13 @@ class MapVis {
         scale = 0.5 / Math.max(dx / mapWidth, dy / mapHeight),
         translate = [mapWidth / 2 - scale * x, mapHeight / 2 - scale * y];
 
-      drawListingPoints(this.id);
+      drawListingPoints(neighborhoodListings.get(this.id));
       d3.select("#map-svg").transition()
         .duration(750)
         .style("stroke-width", "0.5px")
         .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+      
+      showSlider(this.id);
     }
 
     function zoomed() {
@@ -201,12 +215,14 @@ class MapVis {
         .data([])
         .exit()
         .remove();
+      d3.select("#slider-range").select("svg").data([]).exit().remove();
+      d3.select("#value-range").exit().remove();
     }
 
-    function drawListingPoints(id) {
+    function drawListingPoints(inputdata) {
       d3.select("#map-svg").selectAll("circle").remove();
       var circles = d3.select("#map-svg").selectAll("circle")
-        .data(neighborhoodListings.get(id));
+        .data(inputdata);
       circles.enter().append("circle")
         .attr("cx", function (d) {
           let datum = [d[0], d[1]];
@@ -218,7 +234,7 @@ class MapVis {
         })
         .attr("r", "0.7px")
         .attr("fill", function (d) {
-            // TODO: fix for different cities
+          // TODO: fix for different cities
           if (d[3] <= 1881586) {
             return "#00ff00";
           } else {
@@ -288,14 +304,59 @@ class MapVis {
       }
     }
 
+    function showSlider(id) {
+      var listingPoints = neighborhoodListings.get(id);
+      var nightsArray = [];
+      listingPoints.forEach((d) => {
+        nightsArray.push(d[2]);
+      })
+      var min = d3.min(nightsArray);
+      var max = d3.max(nightsArray);
+      var f = d3.format(',.2r');
+      var sliderRange = simpleslider
+        .sliderBottom()
+        .min(min)
+        .max(max)
+        .width(300)
+        .tickFormat(f)
+        .ticks(10)
+        .default([min, max])
+        .fill('#2196f3')
+        .on('onchange', val => {
+          var filteredPoints = [];
+          listingPoints.forEach((d) => {
+            if (d[2] >= val[0] && d[2] <= val[1]) {
+              filteredPoints.push(d);
+            }
+          })
+          // remove old points
+          d3.select("#map-svg").selectAll("circle").data([]).exit().remove();
+          // draw new points
+          drawListingPoints(filteredPoints);
+          d3.select('p#value-range')
+          .text("Minimum nights filter: " + f(val[0]) + "-" + f(val[1]) + " nights");
+        });
+
+      var gRange = d3
+        .select('div#slider-range')
+        .append('svg')
+        .attr('width', 500)
+        .attr('height', 100)
+        .append('g')
+        .attr('transform', 'translate(70,30)');
+
+      gRange.call(sliderRange);
+    }
+
     $('svg path').tipsy({
       gravity: 'w',
       html: true,
       title: function () {
         var d = this.__data__;
+        var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
         return 'Neighborhood: ' + this.id + '<br>' +
           'Borough: ' + d.properties.neighbourhood_group +
-          '<br> Number of listings: ' + neighborhoodCt.get(this.id);
+          '<br> Number of listings: ' + numlistings;
       }
     });
   }

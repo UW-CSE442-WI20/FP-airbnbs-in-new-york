@@ -1,5 +1,8 @@
 const d3 = require('d3');
 
+var highlighted = null;
+var selectedCity = 'New York';
+
 var ctx1 = document.getElementById('barchart-chartcanvas-1');
 var name1 = 'New York';
 const nycount = d3.csv("listings_small.csv").then(processData);
@@ -21,6 +24,27 @@ honolulucount.then(function(value) {
     makeChart(value, ctx3, name3);
 });
 
+var ctx4 = document.getElementById('barchart-chartcanvas-4');
+var name4 = 'San Francisco';
+const sfcount = d3.csv("listings_small_sf.csv").then(processData);
+sfcount.then(function(value) {
+    makeChart(value, ctx4, name4);
+});
+
+var ctx5 = document.getElementById('barchart-chartcanvas-5');
+var name5 = 'New Orleans';
+const nolacount = d3.csv("listings_small_nola.csv").then(processData);
+nolacount.then(function(value) {
+    makeChart(value, ctx5, name5);
+});
+
+var ctx6 = document.getElementById('barchart-chartcanvas-6');
+var name6 = 'Austin';
+const austincount = d3.csv("listings_small_austin.csv").then(processData);
+austincount.then(function(value) {
+    makeChart(value, ctx6, name6);
+});
+
 function processData (data) {
   var nyCount = new Array(0, 0, 0, 0, 0, 0);
     data.forEach(function(d) {
@@ -40,7 +64,7 @@ function makeChart(count, ctx, name) {
         data: {
             labels: ['1' , '2', '3', '4', '5', '6+'],
             datasets: [{
-                label: name,
+                label: '',
                 data: count,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
@@ -62,12 +86,39 @@ function makeChart(count, ctx, name) {
             }]
         },
         options: {
+            title: {
+                display: true,
+                fontColor: '#000',
+                fontSize: 16,
+                text: name
+            },
+            legend: {
+                display: false
+            },
             scales: {
                 yAxes: [{
                     ticks: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        suggestedMax: 40000
                     }
+                }],
+                xAxes: [{
+                  gridLines: {
+                    display: false
+                  }
                 }]
+            },
+            events: ['click'],
+            
+            onClick:  (evt, item) => { 
+               if(highlighted != null){
+                    highlighted.options.title.fontColor= '#000';
+                    highlighted.update();
+               }
+                myChart.options.title.fontColor= '#00A699';
+                myChart.update();
+                highlighted = myChart;
+                selectedCity = myChart.options.title.text;
             }
         }
     });

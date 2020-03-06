@@ -22,8 +22,31 @@
   </head>
   <body>
       <div id="fullpage">
-          <div class="section gray">
+          <div class="section">
               <h1>Airbnbs in New York</h1>
+          </div>
+          <div class="section gray">
+            <h1 style="color:#FF5A5F;"> Select From Popular AirBnB Destinations</h2>
+            <div class="chart-container-r1">
+              <div class="bar-chart-container">
+                <canvas id="barchart-chartcanvas-1"></canvas>
+              </div>
+              <div class="bar-chart-container">
+                <canvas id="barchart-chartcanvas-2"></canvas>
+              </div>
+              <div class="bar-chart-container">
+                <canvas id="barchart-chartcanvas-3"></canvas>
+              </div>
+              <div class="bar-chart-container">
+                <canvas id="barchart-chartcanvas-4"></canvas>
+              </div>
+              <div class="bar-chart-container">
+                <canvas id="barchart-chartcanvas-5"></canvas>
+              </div>
+              <div class="bar-chart-container">
+                <canvas id="barchart-chartcanvas-6"></canvas>
+              </div>
+            </div>
           </div>
           <div class="section">
             <p></p>
@@ -33,6 +56,7 @@
                 </svg>
             </div>
             <div class="box right">
+                <h id="city-name"></h>
                 <p id="value-range"></p>
                 <div id="slider-range"></div>
                 <div id="listing-info">
@@ -45,20 +69,8 @@
                 </div>
             </div>
           </div>
+
           <div class="section gray">
-            <div class="chart-container">
-              <div class="bar-chart-container">
-                <canvas id="barchart-chartcanvas-1"></canvas>
-              </div>
-              <div class="bar-chart-container">
-                <canvas id="barchart-chartcanvas-2"></canvas>
-              </div>
-              <div class="bar-chart-container">
-                <canvas id="barchart-chartcanvas-3"></canvas>
-              </div>
-            </div>
-          </div>
-          <div class="section">
 
             <p></p>
             <!-- <svg width = "600" height = "600" id = "piechart-svg"></svg> -->
@@ -72,7 +84,7 @@
 
               <div class="bar-chart-container">
                   <!-- <canvas id="doughnut-chartcanvas-2"></canvas> -->
-                  <canvas id="bar-chart-horizontal" width="800" height="450"></canvas>
+                  <canvas id="horizontal-bar-chart-canvas" width="800" height="450"></canvas>
               </div>
           </div>
 
