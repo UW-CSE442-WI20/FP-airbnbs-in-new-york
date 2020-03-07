@@ -48,10 +48,22 @@ class PieChartVis {
                             }
                         });
                         
+                        // propertyMap = this.sortMapByValues(propertyMap);
+
                         var ctx  = $("#horizontal-bar-chart-canvas");
                         const horizontalBarChart = new HorizontalBarChart(ctx, propertyMap);
                     });
             };
+
+            // function sortMapByValues(myMap) {
+            //     let ar = [...myMap.entries()];
+            //     // sorty by value
+            //     var sortedArray = ar.sort((a, b) => b[1] - a[1]);
+            //     console.log("sortedArray : " + sortedArray);
+
+            //     var sortedMap = new Map(sortedArray);
+            //     return sortedMap
+            //   }
 
             return this.setDoughnutChartData(context, options);
         }
