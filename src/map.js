@@ -76,6 +76,7 @@ class MapVis {
     const neighborhoodCt = d3.csv(numlistings_csv).then(getNeighborhoodCounts);
     neighborhoodCt.then(function (value) {
       self.drawMap(value);
+      self.showTooltips(value);
       console.log("drawing map")
     });
     function getNeighborhoodCounts(data) {
@@ -90,7 +91,30 @@ class MapVis {
     }
   }
 
+  showTooltips(neighborhoodCt) {
+    var currentCity = this.city;
+    $('svg path').tipsy({
+      gravity: 'w',
+      html: true,
+      title: function () {
+        var d = this.__data__;
+        var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
+        var tooltipText = '';
+        if (currentCity == 'New York') {
+            tooltipText = 'Neighborhood: ' + this.id + '<br>' +
+              'Borough: ' + d.properties.neighbourhood_group +
+              '<br> Number of listings: ' + numlistings;
+        } else {
+            tooltipText = 'Neighborhood: ' + this.id +
+              '<br> Number of listings: ' + numlistings;
+        }
+        return tooltipText;
+      }
+    });
+  }
+
   drawMap(neighborhoodCt) {
+    reset();
     d3.selectAll("#map-svg > *").remove();
     var colorScale = d3.scaleQuantize().domain([minNumListings, maxNumListings]).range(d3.schemePurples[5]);
     //var legend = d3.legend.color().scale(colorScale);
@@ -469,21 +493,7 @@ class MapVis {
       d3.select("#all-points").on("click", () => {
         drawListingPoints(neighborhoodListings.get(id));
       })
-
-      
     }
-
-    $('svg path').tipsy({
-      gravity: 'w',
-      html: true,
-      title: function () {
-        var d = this.__data__;
-        var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
-        return 'Neighborhood: ' + this.id + '<br>' +
-          'Borough: ' + d.properties.neighbourhood_group +
-          '<br> Number of listings: ' + numlistings;
-      }
-    });
   }
 
 
