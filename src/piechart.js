@@ -42,6 +42,8 @@ class PieChartVis {
             this.listings_csv = "listings_small_nola.csv";
           }
 
+          // add honoulu
+
         console.log("city: " + this.city);
         console.log("lisiting csv : " + this.listings_csv);
 
