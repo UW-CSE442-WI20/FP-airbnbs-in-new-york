@@ -1,14 +1,14 @@
 const d3 = require('d3');
 // export class HorizontalBarChart {...}
 let HorizontalBarChart = require('./horizontalbarchart');
-let city = "New York"; // default
 const colorPalette = ['#d3d3d3', '#e08984', '#bf809b', '#65c1cf', '#5374a6', '#776399'];
-let selectedCSVPath = "listings_small.csv"
-const neighborhoodMap = d3.map();
+let neighborhoodMap = d3.map();
+let city = "New York"; // default
+let listings_csv = "listings_small.csv"; // default
 
 class PieChartVis {
-    constructor(context) {
-
+    constructor(city) {
+        var self = this;
         //options
         var options = {
             onClick: graphClickEvent,
@@ -29,14 +29,28 @@ class PieChartVis {
                 }
             }
         };
-        this.setSelectedCSVPath();
+
+        this.city = city;
+        this.listings_csv = "listings_small.csv";;
+        if (this.city === "Seattle") {
+            this.listings_csv = "listings_seattle.csv";
+          } else if (this.city === "Austin") {
+            this.listings_csv = "listings_small_austin.csv";
+          } else if (this.city === "San Francisco") {
+            this.listings_csv = "listings_small_sf.csv";
+          } else if (this.city === "New Orleans") {
+            this.listings_csv = "listings_small_nola.csv";
+          }
+
+        console.log("city: " + this.city);
+        console.log("lisiting csv : " + this.listings_csv);
 
         function graphClickEvent(event, item) {
             var neighborhood = this.data.labels[item[0]._index];
             // console.log("neighborhood : " + neighborhood);
             console.log("starting horizontal bar map...");
             var propertyMap = d3.map();
-            d3.csv(selectedCSVPath)
+            d3.csv(this.listings_csv)
                 .then((data) => {
                     data.forEach(function (d) {
                         if (d.neighbourhood_group == neighborhood) {
@@ -81,33 +95,15 @@ class PieChartVis {
                     const horizontalBarChart = new HorizontalBarChart(ctx, propertyMap);
                 });
         };
-        return this.setDoughnutChartData(context, options);
-    }
-
-    setSelectedCSVPath() {
-        switch (this.city) {
-            case "Seattle":
-                this.selectedCSVPath = "listings_seattle.csv";
-                break;
-            case "Austin":
-                this.selectedCSVPath = "listings_small_austin.csv";
-                break;
-            case "San Francisco":
-                this.selectedCSVPath = "listings_small_sf.csv";
-                break;
-            case "New Orleans":
-                this.selectedCSVPath = "listings_small_nola.csv";
-                break;
-            default:
-                this.selectedCSVPath = "listings_small.csv";
-        }
+        return this.setDoughnutChartData(listings_csv, options);
     }
 
 
 // HELPER FUNCTION TO INITALIZE THE DATA
-setDoughnutChartData(context, options) {
+setDoughnutChartData(listings_csv, options) {
+    var context = $("#doughnut-chartcanvas-1");
     console.log("starting populating map...");
-    d3.csv(selectedCSVPath)
+    d3.csv(listings_csv)
         .then((data) => {
             data.forEach(function (d) {
                 let key = d.neighbourhood_group;
