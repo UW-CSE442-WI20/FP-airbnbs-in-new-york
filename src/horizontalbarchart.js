@@ -9,17 +9,17 @@ class HorizontalBarChart {
 
     var colorArray = this.generateColorArray(propertyMap.keys().length);
 
-    propertyMap = this.sortMapByValuesAndTopListings(propertyMap);
+    var map = this.sortMapByValuesAndTopListings(propertyMap);
 
     var barChart = new Chart(context, {
       type: 'horizontalBar',
       data: {
-        labels: propertyMap.keys(),
+        labels: map.keys(),
         datasets: [
           {
             label: "Population (millions)",
             backgroundColor: colorArray,
-            data: propertyMap.values()
+            data: map.values()
           }
         ]
       },
@@ -76,7 +76,5 @@ class HorizontalBarChart {
   }
 
 }
-
-
 
 module.exports = HorizontalBarChart;
