@@ -1,8 +1,6 @@
 const d3 = require('d3')
 const tipsy = require('jquery.tipsy') // for tooltip
 
-
-
 // You can include local JS files:
 const MyClass = require('./my-class');
 const myClassInstance = new MyClass();
