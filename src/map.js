@@ -10,6 +10,7 @@ const neighborhoodsSeattle = require('../data/neighbourhoods-seattle.geo.json');
 const neighborhoodsAustin = require('../data/neighbourhoods-austin.geo.json');
 const neighborhoodsSF = require('../data/neighbourhoods-sf.geo.json');
 const neighborhoodsNOLA = require('../data/neighbourhoods-nola.geo.json');
+const neighborhoodsHonolulu = require('../data/neighbourhoods-honolulu.geo.json');
 let neighborhoodListings = d3.map();
 let pricesMap = d3.map();
 var active = d3.select(null);
@@ -38,6 +39,10 @@ class MapVis {
       listings_csv = "listings_small_nola.csv";
       numlistings_csv = "num_listings_nola.csv";
       calendar_csv = "calendar_nola.csv";
+    } else if (this.city === "Honolulu") {
+      listings_csv = "listings_hono.csv";
+      // numlistings_csv =
+      // calendar_csv =
     }
     d3.select("#city-name").text("Map of the Airbnbs in " + this.city).style("font-weight", "bold");
     d3.csv(listings_csv)
@@ -155,6 +160,12 @@ class MapVis {
         .scale(60000)
         .translate([mapWidth / 2, mapHeight / 2]);
       neighborhoods = neighborhoodsNOLA;
+    } else if (this.city == "Honolulu") {
+      var projection = d3.geoMercator()
+        .center([-157.80,21.34])
+        .scale(90000)
+        .translate([mapWidth / 2, mapHeight / 2]);
+      neighborhoods = neighborhoodsHonolulu;
     }
     var geoPath = d3.geoPath().projection(projection);
     var currentCity = this.city;
@@ -217,11 +228,11 @@ class MapVis {
         scale = 0.5 / Math.max(dx / mapWidth, dy / mapHeight),
         translate = [mapWidth / 2 - scale * x, mapHeight / 2 - scale * y];
 
-      drawListingPoints(neighborhoodListings.get(this.id));
       d3.select("#map-svg").transition()
         .duration(750)
         .style("stroke-width", "0.5px")
         .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+      drawListingPoints(neighborhoodListings.get(this.id));
 
       showSlider(this.id);
       showRoomTypeFilter(this.id);

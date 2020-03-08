@@ -27,7 +27,7 @@ const chart1 = new PieChart(ctx1);
 // })
 
 $('#fullpage').fullpage({
-  anchors: ['firstPage', 'secondPage', 'thirdPage', 'fourthPage'],
+  anchors: ['home', 'cities', 'map', 'property'],
   navigation: true,
   navigationPosition: 'right',
   verticallyCentered: false,
