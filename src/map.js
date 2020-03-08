@@ -10,7 +10,7 @@ const neighborhoodsSeattle = require('../data/neighbourhoods-seattle.geo.json');
 const neighborhoodsAustin = require('../data/neighbourhoods-austin.geo.json');
 const neighborhoodsSF = require('../data/neighbourhoods-sf.geo.json');
 const neighborhoodsNOLA = require('../data/neighbourhoods-nola.geo.json');
-const neighborhoodsHonolulu = require('../data/neighbourhoods-honolulu.geo.json');
+const neighborhoodsHonolulu = require('../data/neighbourhoods-hono.geo.json');
 let neighborhoodListings = d3.map();
 let pricesMap = d3.map();
 var active = d3.select(null);
@@ -41,8 +41,8 @@ class MapVis {
       calendar_csv = "calendar_nola.csv";
     } else if (this.city === "Honolulu") {
       listings_csv = "listings_hono.csv";
-      // numlistings_csv =
-      // calendar_csv =
+      numlistings_csv = "num_listings_hono.csv";
+      calendar_csv = "calendar_hono.csv";
     }
     d3.select("#city-name").text("Map of the Airbnbs in " + this.city).style("font-weight", "bold");
     d3.csv(listings_csv)
