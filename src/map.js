@@ -43,7 +43,7 @@ class MapVis {
     d3.csv(listings_csv)
       .then((data) => {
         data.forEach(function (d) {
-          let point = [d.longitude, d.latitude, d.minimum_nights, d.id, d.neighbourhood];
+          let point = [d.longitude, d.latitude, d.minimum_nights, d.id, d.neighbourhood, d.name, d.availability_365, d.room_type];
           let key = d.neighbourhood;
           if (neighborhoodListings.has(key)) {
             let currentListings = neighborhoodListings.get(key);
@@ -159,12 +159,9 @@ class MapVis {
 
     // Display the neighborhood and borough name on mouseover
     function handleMouseOver(d) {
-      var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
       d3.select(this)
-        .style("fill", "#E9A553")
+        .style("fill", "#767676")
         .style("cursor", "pointer");
-      d3.select("#selection").text("Neighborhood: " + this.id + ", Borough: " + d.properties.neighbourhood_group);
-      d3.select("#total-listings").text("Total number of listings in this neighborhood: " + numlistings);
     }
 
     // Reset the visual to default fill on mouseout
@@ -173,12 +170,12 @@ class MapVis {
         var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
         return colorScale(numlistings);
       });
-      //d3.select("#selection").text("Neighborhood: none selected, Borough: none selected");
     }
 
     function handlePathClick(d) {
       if (active.node() === this) return reset();
       d3.select("#slider-range").select("svg").data([]).exit().remove();
+      d3.selectAll("button").remove();
       d3.select(this).style("outline", "none");
       active.classed("active", false);
       active = d3.select(this).classed("active", true);
@@ -203,6 +200,10 @@ class MapVis {
         .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
 
       showSlider(this.id);
+      showRoomTypeFilter(this.id);
+      var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
+      d3.select("#selection").text("Neighborhood: " + this.id);
+      d3.select("#total-listings").text("Total number of listings in this neighborhood: " + numlistings);
     }
 
     function zoomed() {
@@ -222,6 +223,10 @@ class MapVis {
         .remove();
       d3.select("#slider-range").select("svg").data([]).exit().remove();
       d3.select("#value-range").exit().remove();
+      d3.select("#listing-avail").select("svg").data([]).exit().remove();
+      d3.selectAll("button").remove();
+      d3.selectAll("p").text("");
+      document.getElementById("price-over-year-container").style.display = "none";
     }
 
     function drawListingPoints(inputdata) {
@@ -240,11 +245,11 @@ class MapVis {
         .attr("r", "0.7px")
         .attr("fill", function (d) {
           if (currentCity === "New York") {
-              if (d[3] <= 1881586) {
-                return "#00ff00";
-              } else {
-                return "#fd5c63";
-              }
+            if (d[3] <= 1881586) {
+              return "#00ff00";
+            } else {
+              return "#fd5c63";
+            }
           }
           return "#00ff00";
         })
@@ -255,19 +260,57 @@ class MapVis {
     }
 
     function handlePointMouseover(d) {
-        d3.select(this).attr("stroke", "white").attr("stroke-width", "0.3px");
+      d3.select(this).attr("stroke", "white").attr("stroke-width", "0.3px");
     }
 
     function handlePointMouseout(d) {
-        d3.select(this).attr("stroke", "transparent");
+      d3.select(this).attr("stroke", "transparent");
     }
 
     function handlePointClick(d) {
+      // remove old point data
+      d3.select("#listing-avail").select("svg").data([]).exit().remove();
+      d3.selectAll("p").text("");
+      // add new point data
       d3.select("#selection").text("Neighborhood: " + d[4]);
+      d3.select("#listing-name").text("Listing name: " + d[5]);
       d3.select("#min-nights").text("Minimum nights: " + d[2]);
       d3.select(".active-point").classed("active-point", false);
       d3.select(this).classed("active-point", true);
+      showAvailability(d[6]);
       displayPriceOverYear(d);
+    }
+
+    function showAvailability(avail) {
+      d3.select("#listing-avail").append("p").text("Listing availability out of the year: " + avail);
+      var colorScale = d3.scaleLinear().domain([0, 365]).range(["yellow", "green"]);
+      var svg = d3.select("#listing-avail").append('svg')
+        .attr("height", 50)
+        .attr("width", 500)
+        .attr('transform', 'translate(70,30)');
+      svg.append('rect')
+        .attr('class', 'bg-rect')
+        .attr('rx', 10)
+        .attr('ry', 10)
+        .attr('fill', 'gray')
+        .attr('height', 15)
+        .attr('width', 365)
+        .attr('x', 0);
+      var progress = svg.append('rect')
+        .attr('class', 'progress-rect')
+        .attr('fill', function () {
+          return colorScale(avail);
+        })
+        .attr('height', 15)
+        .attr('width', 0)
+        .attr('rx', 10)
+        .attr('ry', 10)
+        .attr('x', 0);
+
+      progress.transition()
+        .duration(1000)
+        .attr('width', avail);
+
     }
 
     function displayPriceOverYear(d) {
@@ -351,7 +394,7 @@ class MapVis {
           // draw new points
           drawListingPoints(filteredPoints);
           d3.select('p#value-range')
-          .text("Minimum nights filter: " + f(val[0]) + "-" + f(val[1]) + " nights");
+            .text("Minimum nights filter: " + f(val[0]) + "-" + f(val[1]) + " nights");
         });
 
       var gRange = d3
@@ -363,6 +406,71 @@ class MapVis {
         .attr('transform', 'translate(70,30)');
 
       gRange.call(sliderRange);
+    }
+
+    function showRoomTypeFilter(id) {
+      d3.select("#room-filter").append("button")
+      .text("Entire home/apt")
+      .attr("id", "entire-home")
+      .attr("class", "btn btn-outline-info btn-sm");
+      d3.select("#room-filter").append("button")
+        .text("Hotel room")
+        .attr("id", "hotel")
+        .attr("class", "btn btn-outline-info btn-sm ");
+      d3.select("#room-filter").append("button")
+        .text("Private room")
+        .attr("id", "private")
+        .attr("class", "btn btn-outline-info btn-sm ");
+      d3.select("#room-filter").append("button")
+        .text("Shared room")
+        .attr("id", "shared")
+        .attr("class", "btn btn-outline-info btn-sm ");
+      d3.select("#room-filter").append("button")
+      .text("Show all points")
+      .attr("id", "all-points")
+      .attr("class", "btn btn-outline-warning btn-sm ");
+      var listingPoints = neighborhoodListings.get(id);
+      d3.select("#entire-home").on("click", function(data) {
+        // remove old points
+        d3.select("#map-svg").selectAll("circle").data([]).exit().remove();
+        // draw new points
+        drawListingPoints(listingPoints.filter((d) => {
+          return d[7] == "Entire home/apt";
+        }));
+      });
+
+      d3.select("#hotel").on("click", function(data) {
+        // remove old points
+        d3.select("#map-svg").selectAll("circle").data([]).exit().remove();
+        // draw new points
+        drawListingPoints(listingPoints.filter((d) => {
+          return d[7] == "Hotel room";
+        }));
+      });
+
+      d3.select("#private").on("click", function(data) {
+        // remove old points
+        d3.select("#map-svg").selectAll("circle").data([]).exit().remove();
+        // draw new points
+        drawListingPoints(listingPoints.filter((d) => {
+          return d[7] == "Private room";
+        }));
+      });
+
+      d3.select("#shared").on("click", function(data) {
+        // remove old points
+        d3.select("#map-svg").selectAll("circle").data([]).exit().remove();
+        // draw new points
+        drawListingPoints(listingPoints.filter((d) => {
+          return d[7] == "Shared room";
+        }));
+      });
+
+      d3.select("#all-points").on("click", () => {
+        drawListingPoints(neighborhoodListings.get(id));
+      })
+
+      
     }
 
     $('svg path').tipsy({
@@ -377,6 +485,7 @@ class MapVis {
       }
     });
   }
+
 
 }
 

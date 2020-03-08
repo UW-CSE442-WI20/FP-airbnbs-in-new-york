@@ -1,5 +1,6 @@
 const d3 = require('d3');
 const MapVis = require('./map');
+const PieChart = require('./piechart');
 
 var highlighted = null;
 var selectedCity = 'New York';
@@ -121,6 +122,7 @@ function makeChart(count, ctx, name) {
                 highlighted = myChart;
                 selectedCity = myChart.options.title.text;
                 var myMap = new MapVis(selectedCity);
+                var myPieChart = new PieChart(selectedCity);
             }
         }
     });
