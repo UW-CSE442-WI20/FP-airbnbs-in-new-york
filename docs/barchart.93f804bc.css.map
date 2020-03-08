@@ -1,0 +1,1 @@
+{"version":3,"sources":["barchart.css"],"names":[],"mappings":"AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA","file":"barchart.93f804bc.css","sourceRoot":"../src","sourcesContent":["  .chart-container-r1 {\r\n    width: 80%;\r\n    height: 85%;\r\n    margin: auto;\r\n  }\r\n .bar-chart-container {\r\n    height: 250px;\r\n    width: 380px;\r\n    float: left;\r\n  }"]}
