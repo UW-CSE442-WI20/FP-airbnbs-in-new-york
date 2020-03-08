@@ -9,7 +9,7 @@ class HorizontalBarChart {
 
     var colorArray = this.generateColorArray(propertyMap.keys().length);
 
-    propertyMap = this.sortMapByValues(propertyMap);
+    propertyMap = this.sortMapByValuesAndTopListings(propertyMap);
 
     var barChart = new Chart(context, {
       type: 'horizontalBar',
@@ -34,7 +34,7 @@ class HorizontalBarChart {
     return barChart;
   }
 
-  sortMapByValues(propertyMap) {
+  sortMapByValuesAndTopListings(propertyMap) {
     var arrayLabel = propertyMap.keys();
     var arrayData = propertyMap.values();
 
