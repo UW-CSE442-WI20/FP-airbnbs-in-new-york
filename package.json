@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "parcel src/index.html",
+    "start": "node docs/index.html",
     "build": "parcel build src/index.html --no-minify --public-url https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/; rm -rf docs; mv dist docs;",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
