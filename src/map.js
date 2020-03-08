@@ -394,7 +394,7 @@ class MapVis {
           // draw new points
           drawListingPoints(filteredPoints);
           d3.select('p#value-range')
-            .text("Minimum nights filter: " + f(val[0]) + "-" + f(val[1]) + " nights");
+            .text("Minimum nights range: " + f(val[0]) + "-" + f(val[1]) + " nights");
         });
 
       var gRange = d3
