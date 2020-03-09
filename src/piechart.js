@@ -1,5 +1,4 @@
 const d3 = require('d3');
-// export class HorizontalBarChart {...}
 let HorizontalBarChart = require('./horizontalbarchart');
 const colorPalette = ['#d3d3d3', '#e08984', '#bf809b', '#65c1cf', '#5374a6', '#776399'];
 let neighborhoodMap = d3.map();
@@ -9,6 +8,9 @@ let listings_csv = "listings_small.csv"; // default
 class PieChartVis {
     constructor(city) {
         var self = this;
+
+
+        
         //options
         var options = {
             onClick: graphClickEvent,
