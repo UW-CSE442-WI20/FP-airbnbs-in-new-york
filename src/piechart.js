@@ -2,7 +2,7 @@ const d3 = require('d3');
 let HorizontalBarChart = require('./horizontalbarchart');
 const neighborhoodMap = d3.map();
 const colorPalette = ['#d3d3d3', '#e08984', '#bf809b', '#65c1cf', '#5374a6', '#776399'];
-
+let city = "New Yor"
 
 class PieChartVis {
 
@@ -11,7 +11,7 @@ class PieChartVis {
         var self = this;
         this.city = city;
 
-        var listings_csv = "listings_small.csv";
+        var listings_csv = "listings_small.csv"; // New York by default
         if (this.city === "Seattle") {
             listings_csv = "listings_seattle.csv";
           } else if (this.city === "Austin") {
@@ -63,7 +63,7 @@ class PieChartVis {
                         }
                     });
                     var ctx  = $("#horizontal-bar-chart-canvas");
-                    const horizontalBarChart = new HorizontalBarChart(ctx, propertyMap);
+                    var horizontalBarChart = new HorizontalBarChart(ctx, propertyMap);
                 });
         };
         return self.setDoughnutChartData(listings_csv, options);
@@ -85,7 +85,10 @@ class PieChartVis {
                         neighborhoodMap.set(key, 1);
                     }
                 });
+                
                 // this.debuggingPrints();
+                // debugging prints
+                colors = generateColorArray(neighborhoodMap.keys().length);
 
                 //doughnut chart data
                 let chartData = {
@@ -94,8 +97,10 @@ class PieChartVis {
                         {
                             label: "TeamA Score",
                             data: neighborhoodMap.values(),
-                            backgroundColor: colorPalette,
-                            borderColor: colorPalette,
+                            // backgroundColor: colorPalette,
+                            // borderColor: colorPalette,
+                            backgroundColor: colors,
+                            borderColor: colors,
                             borderWidth: Array(neighborhoodMap.keys().length).fill(1)
                         }
                     ]
@@ -110,6 +115,19 @@ class PieChartVis {
 
                 return chart;
             });
+
+                    // Helper function to generate an array of colors for pie chart data
+        function generateColorArray(length) {
+            var colors = [];
+            while (colors.length < length) {
+                do {
+                    var color = Math.floor((Math.random() * 1000000) + 1);
+                } while (colors.indexOf(color) >= 0);
+                colors.push("#" + ("000000" + color.toString(16)).slice(-6));
+            }
+            return colors
+        }
+    
 
     }
 
