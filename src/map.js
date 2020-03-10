@@ -244,7 +244,6 @@ class MapVis {
       showRoomTypeFilter(this.id);
       var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
       if (city == "Austin") {
-        console.log(austinZipCodes);
         d3.select("#selection").text("General Neighborhood: " + austinZipCodes.get(this.id) + ", Zip Code: " + this.id);
       } else {
         d3.select("#selection").text("Neighborhood: " + this.id);
