@@ -168,8 +168,8 @@ class MapVis {
       neighborhoods = neighborhoodsNOLA;
     } else if (this.city == "Honolulu") {
       var projection = d3.geoMercator()
-        .center([-157.80,21.34])
-        .scale(90000)
+        .center([-157.95, 21.48])
+        .scale(50000)
         .translate([mapWidth / 2, mapHeight / 2]);
       neighborhoods = neighborhoodsHonolulu;
     }
