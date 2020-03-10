@@ -13,6 +13,7 @@ const neighborhoodsNOLA = require('../data/neighbourhoods-nola.geo.json');
 const neighborhoodsHonolulu = require('../data/neighbourhoods-hono.geo.json');
 let neighborhoodListings = d3.map();
 let pricesMap = d3.map();
+let austinZipCodes = d3.map();
 var active = d3.select(null);
 let city = "New York"; // default
 
@@ -31,6 +32,11 @@ class MapVis {
       listings_csv = "listings_small_austin.csv";
       numlistings_csv = "num_listings_austin.csv";
       calendar_csv = "calendar_austin.csv";
+      d3.csv("austin-zipcodes.csv").then((data) => {
+        data.forEach((d) => {
+          austinZipCodes.set(d.neighborhood, d.name);
+        })
+      });
     } else if (this.city === "San Francisco") {
       listings_csv = "listings_small_sf.csv";
       numlistings_csv = "num_listings_sf.csv";
@@ -129,7 +135,7 @@ class MapVis {
       .attr("width", mapWidth)
       .attr("height", mapHeight)
       .on("click", reset);
-
+    var city = this.city;
     // default is New York
     let neighborhoods = neighborhoodsNYC;
     var projection = d3.geoMercator()
@@ -237,7 +243,12 @@ class MapVis {
       showSlider(this.id);
       showRoomTypeFilter(this.id);
       var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
-      d3.select("#selection").text("Neighborhood: " + this.id);
+      if (city == "Austin") {
+        console.log(austinZipCodes);
+        d3.select("#selection").text("General Neighborhood: " + austinZipCodes.get(this.id) + ", Zip Code: " + this.id);
+      } else {
+        d3.select("#selection").text("Neighborhood: " + this.id);
+      }
       d3.select("#total-listings").text("Total number of listings in this neighborhood: " + numlistings);
     }
 
