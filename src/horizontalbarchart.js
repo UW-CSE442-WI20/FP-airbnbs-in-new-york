@@ -1,13 +1,11 @@
 const d3 = require('d3');
 var TOPLISTINGS = 5;
+const colorPalette = ['#d3d3d3', '#e08984', '#bf809b', '#65c1cf', '#5374a6', '#776399'];
+
 
 class HorizontalBarChart {
 
   constructor(context, propertyMap) {
-
-    console.log("creating horizontal bar chart");
-
-    var colorArray = this.generateColorArray(propertyMap.keys().length);
 
     var propertyMap = this.sortMapByValuesAndTopListings(propertyMap);
 
@@ -18,7 +16,7 @@ class HorizontalBarChart {
         datasets: [
           {
             label: "Population (millions)",
-            backgroundColor: colorArray,
+            backgroundColor: colorPalette,
             data: propertyMap.values()
           }
         ]
@@ -63,20 +61,6 @@ class HorizontalBarChart {
   }
 
 
-  // Helper function to generate an array of colors for pie chart data
-  generateColorArray(length) {
-    var colors = [];
-    while (colors.length < length) {
-      do {
-        var color = Math.floor((Math.random() * 1000000) + 1);
-      } while (colors.indexOf(color) >= 0);
-      colors.push("#" + ("000000" + color.toString(16)).slice(-6));
-    }
-    return colors
-  }
-
 }
-
-
 
 module.exports = HorizontalBarChart;

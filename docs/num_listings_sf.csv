@@ -1,3 +1,38 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f10f72e94884c1dd430a69ac43985cd98389d15690f2f6446145269d4a03b742
-size 700
+neighborhood,num_listings
+Bayview,226
+Bernal Heights,411
+Castro/Upper Market,471
+Chinatown,139
+Crocker Amazon,49
+Diamond Heights,17
+Downtown/Civic Center,761
+Excelsior,189
+Financial District,205
+Glen Park,66
+Golden Gate Park,5
+Haight Ashbury,413
+Inner Richmond,227
+Inner Sunset,171
+Lakeshore,59
+Marina,194
+Mission,789
+Nob Hill,324
+Noe Valley,336
+North Beach,190
+Ocean View,144
+Outer Mission,180
+Outer Richmond,188
+Outer Sunset,319
+Pacific Heights,161
+Parkside,142
+Potrero Hill,250
+Presidio,1
+Presidio Heights,23
+Russian Hill,189
+Seacliff,22
+South of Market,751
+Treasure Island/YBI,2
+Twin Peaks,69
+Visitacion Valley,76
+West of Twin Peaks,144
+Western Addition,630

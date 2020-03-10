@@ -27,9 +27,9 @@ const chart1 = new PieChart(ctx1);
 // })
 
 $('#fullpage').fullpage({
-  anchors: ['firstPage', 'secondPage', 'thirdPage', 'fourthPage'],
+  anchors: ['home', 'cities', 'map', 'property'],
   navigation: true,
   navigationPosition: 'right',
   verticallyCentered: false,
-  navigationTooltips: ['Home', 'Select a City', 'Map of New York', 'Property Types']
+  navigationTooltips: ['Home', 'Select a City', 'Map of Listings', 'Property Types']
 });

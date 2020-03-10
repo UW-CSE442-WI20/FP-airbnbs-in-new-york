@@ -1,3 +1,224 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:dc4e94479fe0a707a091a8a71911017a33312586fa7ba0c9b54b20a8cdf1a866
-size 3691
+﻿neighborhood,num_listings
+Allerton,46
+Arden Heights,5
+Arrochar,21
+Arverne,85
+Astoria,931
+Bath Beach,29
+Battery Park City,72
+Bay Ridge,153
+Bay Terrace,5
+"Bay Terrace, Staten Island",1
+Baychester,8
+Bayside,51
+Bayswater,13
+Bedford-Stuyvesant,3974
+Belle Harbor,7
+Bellerose,13
+Belmont,32
+Bensonhurst,81
+Bergen Beach,17
+Boerum Hill,180
+Borough Park,148
+Breezy Point,3
+Briarwood,48
+Brighton Beach,76
+Bronxdale,18
+Brooklyn Heights,150
+Brownsville,77
+Bull's Head,3
+Bushwick,2504
+Cambria Heights,32
+Canarsie,172
+Carroll Gardens,239
+Castle Hill,3
+Castleton Corners,4
+Chelsea,1162
+Chinatown,376
+City Island,18
+Civic Center,44
+Claremont Village,28
+Clason Point,28
+Clifton,17
+Clinton Hill,581
+Cobble Hill,99
+College Point,25
+Columbia St,42
+Concord,19
+Concourse,49
+Concourse Village,34
+Coney Island,14
+Co-op City,4
+Corona,82
+Country Club,2
+Crown Heights,1635
+Cypress Hills,168
+Ditmars Steinway,307
+Dongan Hills,7
+Douglaston,8
+Downtown Brooklyn,81
+DUMBO,41
+Dyker Heights,18
+East Elmhurst,234
+East Flatbush,522
+East Harlem,1155
+East Morrisania,15
+East New York,249
+East Village,1883
+Eastchester,13
+Edenwald,19
+Edgemere,12
+Elmhurst,284
+Eltingville,3
+Emerson Hill,5
+Far Rockaway,36
+Fieldston,12
+Financial District,732
+Flatbush,639
+Flatiron District,75
+Flatlands,77
+Flushing,499
+Fordham,56
+Forest Hills,133
+Fort Greene,479
+Fort Hamilton,57
+Fort Wadsworth,1
+Fresh Meadows,35
+Gerritsen Beach,2
+Glendale,69
+Gowanus,241
+Gramercy,354
+Graniteville,2
+Grant City,9
+Gravesend,91
+Great Kills,8
+Greenpoint,1104
+Greenwich Village,371
+Grymes Hill,9
+Harlem,2746
+Hell's Kitchen,2052
+Highbridge,31
+Hollis,26
+Holliswood,5
+Howard Beach,24
+Howland Hook,2
+Huguenot,2
+Hunts Point,20
+Inwood,254
+Jackson Heights,188
+Jamaica,266
+Jamaica Estates,16
+Jamaica Hills,17
+Kensington,166
+Kew Gardens,46
+Kew Gardens Hills,29
+Kingsbridge,72
+Kips Bay,447
+Laurelton,27
+Lighthouse Hill,2
+Little Italy,110
+Little Neck,5
+Long Island City,572
+Longwood,65
+Lower East Side,944
+Manhattan Beach,10
+Marble Hill,12
+Mariners Harbor,11
+Maspeth,130
+Melrose,12
+Middle Village,38
+Midland Beach,9
+Midtown,1520
+Midwood,117
+Mill Basin,9
+Morningside Heights,338
+Morris Heights,18
+Morris Park,19
+Morrisania,25
+Mott Haven,65
+Mount Eden,8
+Mount Hope,26
+Murray Hill,511
+Navy Yard,15
+Neponsit,3
+New Brighton,4
+New Dorp,1
+New Dorp Beach,5
+New Springville,4
+NoHo,72
+Nolita,280
+North Riverdale,10
+Norwood,39
+Oakwood,3
+Olinville,6
+Ozone Park,65
+Park Slope,507
+Parkchester,47
+Pelham Bay,16
+Pelham Gardens,34
+Port Morris,48
+Port Richmond,9
+Prince's Bay,3
+Prospect Heights,349
+Prospect-Lefferts Gardens,535
+Queens Village,70
+Randall Manor,17
+Red Hook,82
+Rego Park,87
+Richmond Hill,110
+Richmondtown,2
+Ridgewood,440
+Riverdale,9
+Rockaway Beach,75
+Roosevelt Island,83
+Rosebank,8
+Rosedale,74
+Rossville,2
+Schuylerville,12
+Sea Gate,9
+Sheepshead Bay,176
+Shore Acres,10
+Silver Lake,2
+SoHo,356
+Soundview,17
+South Beach,7
+South Ozone Park,43
+South Slope,271
+Springfield Gardens,103
+Spuyten Duyvil,4
+St. Albans,85
+St. George,53
+Stapleton,24
+Stuyvesant Town,42
+Sunnyside,361
+Sunset Park,433
+Theater District,309
+Throgs Neck,30
+Todt Hill,4
+Tompkinsville,44
+Tottenville,8
+Tremont,18
+Tribeca,196
+Two Bridges,76
+Unionport,13
+University Heights,20
+Upper East Side,1800
+Upper West Side,1982
+Van Nest,14
+Vinegar Hill,33
+Wakefield,64
+Washington Heights,942
+West Brighton,22
+West Farms,2
+West Village,774
+Westchester Square,10
+Westerleigh,4
+Whitestone,21
+Williamsbridge,45
+Williamsburg,3936
+Willowbrook,1
+Windsor Terrace,152
+Woodhaven,97
+Woodlawn,11
+Woodrow,1
+Woodside,261

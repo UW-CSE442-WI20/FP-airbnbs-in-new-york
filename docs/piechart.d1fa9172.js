@@ -28885,14 +28885,6 @@ Object.keys(_d3Zoom).forEach(function (key) {
   });
 });
 },{"./dist/package.js":"../node_modules/d3/dist/package.js","d3-array":"../node_modules/d3-array/src/index.js","d3-axis":"../node_modules/d3-axis/src/index.js","d3-brush":"../node_modules/d3-brush/src/index.js","d3-chord":"../node_modules/d3-chord/src/index.js","d3-collection":"../node_modules/d3-collection/src/index.js","d3-color":"../node_modules/d3-color/src/index.js","d3-contour":"../node_modules/d3-contour/src/index.js","d3-dispatch":"../node_modules/d3-dispatch/src/index.js","d3-drag":"../node_modules/d3-drag/src/index.js","d3-dsv":"../node_modules/d3-dsv/src/index.js","d3-ease":"../node_modules/d3-ease/src/index.js","d3-fetch":"../node_modules/d3-fetch/src/index.js","d3-force":"../node_modules/d3-force/src/index.js","d3-format":"../node_modules/d3-format/src/index.js","d3-geo":"../node_modules/d3-geo/src/index.js","d3-hierarchy":"../node_modules/d3-hierarchy/src/index.js","d3-interpolate":"../node_modules/d3-interpolate/src/index.js","d3-path":"../node_modules/d3-path/src/index.js","d3-polygon":"../node_modules/d3-polygon/src/index.js","d3-quadtree":"../node_modules/d3-quadtree/src/index.js","d3-random":"../node_modules/d3-random/src/index.js","d3-scale":"../node_modules/d3-scale/src/index.js","d3-scale-chromatic":"../node_modules/d3-scale-chromatic/src/index.js","d3-selection":"../node_modules/d3-selection/src/index.js","d3-shape":"../node_modules/d3-shape/src/index.js","d3-time":"../node_modules/d3-time/src/index.js","d3-time-format":"../node_modules/d3-time-format/src/index.js","d3-timer":"../node_modules/d3-timer/src/index.js","d3-transition":"../node_modules/d3-transition/src/index.js","d3-voronoi":"../node_modules/d3-voronoi/src/index.js","d3-zoom":"../node_modules/d3-zoom/src/index.js"}],"horizontalbarchart.js":[function(require,module,exports) {
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -28901,29 +28893,24 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 var d3 = require('d3');
 
+var TOPLISTINGS = 5;
+
 var HorizontalBarChart =
 /*#__PURE__*/
 function () {
   function HorizontalBarChart(context, propertyMap) {
     _classCallCheck(this, HorizontalBarChart);
 
-    console.log("creating horizontal bar chart");
     var colorArray = this.generateColorArray(propertyMap.keys().length);
-    propertyMap = this.sortMapByValues(propertyMap); // console.log("keys : " + propertyMap.keys());
-    // console.log("values : " + propertyMap.values());
-    // propertyMap = this.sortMapByValues(propertyMap);
-    // console.log(sortedMap);
-
+    var map = this.sortMapByValuesAndTopListings(propertyMap);
     var barChart = new Chart(context, {
       type: 'horizontalBar',
       data: {
-        // labels: propertyMap.keys(),
-        lablels: newArrayLabel,
+        labels: map.keys(),
         datasets: [{
-          label: "Population (millions)",
+          label: "Population",
           backgroundColor: colorArray,
-          // data: propertyMap.values()
-          data: newArrayData
+          data: map.values()
         }]
       },
       options: {
@@ -28932,7 +28919,7 @@ function () {
         },
         title: {
           display: true,
-          text: 'Predicted world population (millions) in 2050'
+          text: 'Number of Listings'
         }
       }
     });
@@ -28940,52 +28927,32 @@ function () {
   }
 
   _createClass(HorizontalBarChart, [{
-    key: "sortMapByValues",
-    value: function sortMapByValues(propertyMap) {
-      console.log("keys : " + propertyMap.keys());
-      console.log("value : " + propertyMap.values());
-      arrayLabel = propertyMap.keys();
-      arrayData = propertyMap.values();
-      arrayOfObj = arrayLabel.map(function (d, i) {
+    key: "sortMapByValuesAndTopListings",
+    value: function sortMapByValuesAndTopListings(propertyMap) {
+      var arrayLabel = propertyMap.keys();
+      var arrayData = propertyMap.values();
+      var arrayOfObj = arrayLabel.map(function (d, i) {
         return {
           label: d,
           data: arrayData[i] || 0
         };
       });
-      sortedArrayOfObj = arrayOfObj.sort(function (a, b) {
+      var sortedArrayOfObj = arrayOfObj.sort(function (a, b) {
         return b.data - a.data;
       });
-      newArrayLabel = [];
-      newArrayData = [];
+      var newArrayLabel = [];
+      var newArrayData = [];
       sortedArrayOfObj.forEach(function (d) {
         newArrayLabel.push(d.label);
         newArrayData.push(d.data);
-      }); // console.log("newArrayLabel : " + newArrayLabel);
-      // console.log("newArrayData : " + newArrayData);
+      });
+      var newMap = d3.map();
 
-      var newMap = new Map();
-
-      for (var i in newMap.keys()) {
-        newMap.put(newArrayLabel[i], newArrayData[i]);
+      for (var i = 0; i < TOPLISTINGS; i++) {
+        newMap.set(newArrayLabel[i], newArrayData[i]);
       }
 
-      console.log("new map : " + newMap);
-    }
-  }, {
-    key: "sortMapByValues",
-    value: function sortMapByValues(myMap) {
-      var ar = _toConsumableArray(myMap.entries()); // sorty by value
-
-
-      sortedArray = ar.sort(function (a, b) {
-        return b[1] - a[1];
-      });
-      sortedMap = new Map(sortedArray);
-      console.log(sortedMap); // // sort by value
-      // const mapSort1 = new Map([...propertyMap.entries()].sort((a, b) => b[1] - a[1]));
-      // console.log(mapSort1);
-      // // Map(4) {"c" => 4, "a" => 3, "d" => 2, "b" => 1}
-      // return mapSort1;
+      return newMap;
     } // Helper function to generate an array of colors for pie chart data
 
   }, {
@@ -29021,15 +28988,20 @@ var d3 = require('d3'); // export class HorizontalBarChart {...}
 
 var HorizontalBarChart = require('./horizontalbarchart');
 
+var colorPalette = ['#d3d3d3', '#e08984', '#bf809b', '#65c1cf', '#5374a6', '#776399'];
 var neighborhoodMap = d3.map();
+var city = "New York"; // default
+
+var listings_csv = "listings_small.csv"; // default
 
 var PieChartVis =
 /*#__PURE__*/
 function () {
-  function PieChartVis(context) {
+  function PieChartVis(city) {
     _classCallCheck(this, PieChartVis);
 
-    //options
+    var self = this; //options
+
     var options = {
       onClick: graphClickEvent,
       responsive: true,
@@ -29049,13 +29021,30 @@ function () {
         }
       }
     };
+    this.city = city;
+    this.listings_csv = "listings_small.csv";
+    ;
+
+    if (this.city === "Seattle") {
+      this.listings_csv = "listings_seattle.csv";
+    } else if (this.city === "Austin") {
+      this.listings_csv = "listings_small_austin.csv";
+    } else if (this.city === "San Francisco") {
+      this.listings_csv = "listings_small_sf.csv";
+    } else if (this.city === "New Orleans") {
+      this.listings_csv = "listings_small_nola.csv";
+    } // add honoulu
+
+
+    console.log("city: " + this.city);
+    console.log("lisiting csv : " + this.listings_csv);
 
     function graphClickEvent(event, item) {
       var neighborhood = this.data.labels[item[0]._index]; // console.log("neighborhood : " + neighborhood);
 
       console.log("starting horizontal bar map...");
       var propertyMap = d3.map();
-      d3.csv("listings_small.csv").then(function (data) {
+      d3.csv(this.listings_csv).then(function (data) {
         data.forEach(function (d) {
           if (d.neighbourhood_group == neighborhood) {
             var key = d.property_type;
@@ -29067,34 +29056,52 @@ function () {
               propertyMap.set(key, 1);
             }
           }
-        }); // propertyMap = this.sortMapByValues(propertyMap);
+        });
+        propertyMap = sortMapByValues(propertyMap);
+
+        function sortMapByValues(propertyMap) {
+          var arrayLabel = propertyMap.keys();
+          var arrayData = propertyMap.values();
+          arrayOfObj = arrayLabel.map(function (d, i) {
+            return {
+              label: d,
+              data: arrayData[i] || 0
+            };
+          });
+          sortedArrayOfObj = arrayOfObj.sort(function (a, b) {
+            return b.data - a.data;
+          });
+          newArrayLabel = [];
+          newArrayData = [];
+          sortedArrayOfObj.forEach(function (d) {
+            newArrayLabel.push(d.label);
+            newArrayData.push(d.data);
+          });
+          var map = d3.map();
+
+          for (var i = 0; i < newArrayLabel.length; i++) {
+            map.set(newArrayLabel[i], newArrayData[i]);
+          }
+
+          return map;
+        }
 
         var ctx = $("#horizontal-bar-chart-canvas");
         var horizontalBarChart = new HorizontalBarChart(ctx, propertyMap);
       });
     }
 
-    ; // function sortMapByValues(myMap) {
-    //     let ar = [...myMap.entries()];
-    //     // sorty by value
-    //     var sortedArray = ar.sort((a, b) => b[1] - a[1]);
-    //     console.log("sortedArray : " + sortedArray);
-    //     var sortedMap = new Map(sortedArray);
-    //     return sortedMap
-    //   }
-
-    return this.setDoughnutChartData(context, options);
-  } // create 5 maps for each borough
-  //key : property type
-  // value: count
-  // HELPER FUNCTION TO INITALIZE THE DATA
+    ;
+    return this.setDoughnutChartData(listings_csv, options);
+  } // HELPER FUNCTION TO INITALIZE THE DATA
 
 
   _createClass(PieChartVis, [{
     key: "setDoughnutChartData",
-    value: function setDoughnutChartData(context, options) {
+    value: function setDoughnutChartData(listings_csv, options) {
+      var context = $("#doughnut-chartcanvas-1");
       console.log("starting populating map...");
-      d3.csv("listings_small.csv").then(function (data) {
+      d3.csv(listings_csv).then(function (data) {
         data.forEach(function (d) {
           var key = d.neighbourhood_group;
 
@@ -29104,18 +29111,15 @@ function () {
           } else {
             neighborhoodMap.set(key, 1);
           }
-        }); // debugging prints
-
-        colors = generateColorArray(neighborhoodMap.keys().length); // this.debuggingPrints();
-        //doughnut chart data
+        }); //doughnut chart data
 
         var chartData = {
           labels: neighborhoodMap.keys(),
           datasets: [{
             label: "TeamA Score",
             data: neighborhoodMap.values(),
-            backgroundColor: colors,
-            borderColor: colors,
+            backgroundColor: colorPalette,
+            borderColor: colorPalette,
             borderWidth: Array(neighborhoodMap.keys().length).fill(1)
           }]
         }; //create Chart class object
@@ -29126,21 +29130,7 @@ function () {
           options: options
         });
         return chart;
-      }); // Helper function to generate an array of colors for pie chart data
-
-      function generateColorArray(length) {
-        var colors = [];
-
-        while (colors.length < length) {
-          do {
-            var color = Math.floor(Math.random() * 1000000 + 1);
-          } while (colors.indexOf(color) >= 0);
-
-          colors.push("#" + ("000000" + color.toString(16)).slice(-6));
-        }
-
-        return colors;
-      }
+      });
     } // Helper method : debugg prints
 
   }, {
@@ -29185,7 +29175,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57306" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61308" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
