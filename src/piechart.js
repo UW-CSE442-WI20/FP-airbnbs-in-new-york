@@ -13,7 +13,7 @@ class PieChartVis {
 
         var listings_csv = "listings_small.csv"; // New York by default
         if (this.city === "Seattle") {
-            listings_csv = "listings_seattle.csv";
+            listings_csv = "listings_small_seattle.csv";
           } else if (this.city === "Austin") {
             listings_csv = "listings_small_austin.csv";
           } else if (this.city === "San Francisco") {
