@@ -21,7 +21,10 @@ class PieChartVis {
           } else if (this.city === "New Orleans") {
             listings_csv = "listings_small_nola.csv";
           }
+
           console.log("listings_csv : " + listings_csv);
+          console.log("listings_csv : " + city);
+
 
         //options
         var options = {
@@ -47,7 +50,6 @@ class PieChartVis {
         function graphClickEvent(event, item) {
             var neighborhood = this.data.labels[item[0]._index];
             console.log("neighborhood : " + neighborhood);
-            console.log("starting horizontal bar map...");
             var propertyMap = d3.map();
             d3.csv(listings_csv)
                 .then((data) => {
@@ -62,17 +64,25 @@ class PieChartVis {
                             }
                         }
                     });
-                    var ctx  = $("#horizontal-bar-chart-canvas");
-                    var horizontalBarChart = new HorizontalBarChart(ctx, propertyMap);
+                    console.log("starting horizontal bar map...");
+                    resetHorizontalBarChart();
+                    var horizontalBarChart = new HorizontalBarChart(propertyMap);
                 });
         };
         return self.setDoughnutChartData(listings_csv, options);
     }
 
 
+    resetHorizontalBarChart() {
+        $("#doughnut-chartcanvas-1").remove();// remove <canvas> element
+        $('#doughnut-chart-container').append('<canvas id="doughnut-chartcanvas-1"><canvas>');
+
+    }
+
+
     // HELPER FUNCTION TO INITALIZE THE DATA
     setDoughnutChartData(listings_csv, options) {
-        var context = $("#doughnut-chartcanvas-1");
+        resetPieChart();
         console.log("starting populating map...");
         d3.csv(listings_csv)
             .then((data) => {
@@ -106,6 +116,7 @@ class PieChartVis {
                     ]
                 };
         
+                var context = $("#doughnut-chartcanvas-1");
                 //create Chart class object
                 var chart = new Chart(context, {
                     type: "doughnut",
@@ -116,7 +127,16 @@ class PieChartVis {
                 return chart;
             });
 
-                    // Helper function to generate an array of colors for pie chart data
+        function resetPieChart() {
+            $("#doughnut-chartcanvas-1").remove();// remove <canvas> element
+            $('#doughnut-chart-container').append('<canvas id="doughnut-chartcanvas-1"><canvas>');
+            // canvas = document.querySelector('#doughnut-chartcanvas-1');
+            // ctx = canvas.getContext('2d');
+            // ctx.canvas.width = $('#doughnut-chart-container').width(); // resize to parent width
+            // ctx.canvas.height = $('#doughnut-chart-container').height(); // resize to parent height
+        }
+
+        // Helper function to generate an array of colors for pie chart data
         function generateColorArray(length) {
             var colors = [];
             while (colors.length < length) {

@@ -12,10 +12,10 @@ const myMap = new MapVis("New York");
 
 // draw pie chart
 const PieChart = require('./piechart');
+const mypiechart = new PieChart("New York");
 
 //get the doughnut chart canvas
-var ctx1 = $("#doughnut-chartcanvas-1");
-const chart1 = new PieChart(ctx1);
+// var ctx1 = $("#doughnut-chartcanvas-1");
 
 
 // listings csv includes id, name, host_id, host_name, neighbourhood_group, neigbourhood,

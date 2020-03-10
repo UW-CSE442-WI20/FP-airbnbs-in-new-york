@@ -5,10 +5,15 @@ const colorPalette = ['#d3d3d3', '#e08984', '#bf809b', '#65c1cf', '#5374a6', '#7
 
 class HorizontalBarChart {
 
-  constructor(context, propertyMap) {
-
+  constructor(propertyMap) {
     var propertyMap = this.sortMapByValuesAndTopListings(propertyMap);
+    console.log("keys :" + propertyMap.keys());
+    console.log("values :" + propertyMap.values());
 
+    var colors = generateColorArray(propertyMap.keys().length);
+
+
+    var context  = $("#horizontal-bar-chart-canvas");
     var barChart = new Chart(context, {
       type: 'horizontalBar',
       data: {
@@ -16,7 +21,7 @@ class HorizontalBarChart {
         datasets: [
           {
             label: "Population (millions)",
-            backgroundColor: colorPalette,
+            backgroundColor: colors,
             data: propertyMap.values()
           }
         ]
@@ -29,6 +34,20 @@ class HorizontalBarChart {
         }
       }
     });
+
+    
+    // Helper function to generate an array of colors for pie chart data
+    function generateColorArray(length) {
+        var colors = [];
+        while (colors.length < length) {
+            do {
+                var color = Math.floor((Math.random() * 1000000) + 1);
+            } while (colors.indexOf(color) >= 0);
+            colors.push("#" + ("000000" + color.toString(16)).slice(-6));
+        }
+        return colors
+    }
+
     return barChart;
   }
 
