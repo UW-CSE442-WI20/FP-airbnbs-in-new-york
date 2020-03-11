@@ -53,3 +53,7 @@ body {
     height: 40%;
     width: 60%;
 }
+
+.axisWhite text {
+    fill: white;
+}

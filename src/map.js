@@ -96,8 +96,8 @@ class MapVis {
       data.forEach((d) => {
         neighborhoodMap.set(d.neighborhood, d.num_listings);
       })
-      minNumListings = d3.min(neighborhoodMap.values());
-      maxNumListings = d3.max(neighborhoodMap.values());
+      minNumListings = Math.min(...neighborhoodMap.values());
+      maxNumListings = Math.max(...neighborhoodMap.values());
       return neighborhoodMap;
     }
   }
@@ -127,9 +127,10 @@ class MapVis {
   drawMap(neighborhoodCt) {
     reset();
     d3.selectAll("#map-svg > *").remove();
-    var colorScale = d3.scaleQuantize().domain([minNumListings, maxNumListings]).range(d3.schemePurples[5]);
-    //var colorLegend = d3.legend.color().scale(colorScale);
-    //d3.select("#map-legend").call(colorLegend);
+    console.log("min listings: " + minNumListings + " max listings: " + maxNumListings);
+    //var colorScale = d3.scaleQuantize().domain([minNumListings, maxNumListings]).range(d3.schemePurples[6]);
+    var colorScale = d3.scaleLinear().domain([minNumListings, maxNumListings]).range([d3.interpolatePurples(0.3), d3.interpolatePurples(1)]);
+    drawLegend();
     d3.select("#map-svg").append("rect")
       .attr("class", "background")
       .attr("width", mapWidth)
@@ -193,10 +194,47 @@ class MapVis {
         var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
         return colorScale(numlistings);
       })
-      .style("stroke", "#d3d3d3") // set outline to be gray
+      .style("stroke", "#9e9d9d") // set outline to be gray
       .on("mouseover", handleMouseOver)
       .on("mouseout", handleMouseOut)
       .on("click", handlePathClick);
+
+    function drawLegend() {
+
+      var svg = d3.select("#legend-svg");
+
+      var defs = svg.append("defs");
+
+      var gradient = defs.append("linearGradient")
+      .attr("id", "svgGradient")
+      .attr("x1", "100%")
+      .attr("x2", "100%")
+      .attr("y1", "0%")
+      .attr("y2", "100%");
+
+      gradient.append("stop")
+      .attr('class', 'start')
+      .attr("offset", "0%")
+      .attr("stop-color", d3.interpolatePurples(1))
+      .attr("stop-opacity", 1);
+
+      gradient.append("stop")
+      .attr('class', 'end')
+      .attr("offset", "100%")
+      .attr("stop-color", d3.interpolatePurples(0.3))
+      .attr("stop-opacity", 1);
+
+      var legend = svg.append("rect")
+              .attr("width", 40)
+              .attr("height", 300)
+              .attr("fill", "url(#svgGradient)")
+              .attr("stroke", "#9e9d9d");
+      var label = d3.scaleLinear().range([300, 0]).domain([minNumListings, maxNumListings]);
+      var legendLabels = d3.axisRight(label);
+      svg.append("g")
+                .attr("class", "axisWhite")
+                .call(legendLabels);
+    }
 
     // Display the neighborhood and borough name on mouseover
     function handleMouseOver(d) {
