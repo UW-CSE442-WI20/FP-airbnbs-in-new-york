@@ -128,8 +128,8 @@ class MapVis {
     reset();
     d3.selectAll("#map-svg > *").remove();
     var colorScale = d3.scaleQuantize().domain([minNumListings, maxNumListings]).range(d3.schemePurples[5]);
-    //var legend = d3.legend.color().scale(colorScale);
-    //d3.select("#map-svg").append("g").attr("transform", "translate(352, 60)").call(colorLegend);
+    //var colorLegend = d3.legend.color().scale(colorScale);
+    //d3.select("#map-legend").call(colorLegend);
     d3.select("#map-svg").append("rect")
       .attr("class", "background")
       .attr("width", mapWidth)
@@ -272,7 +272,7 @@ class MapVis {
 
     function clearPreviousListing() {
       d3.select("#listing-avail").select("svg").data([]).exit().remove();
-      d3.selectAll("p").text("");
+      d3.select("#listing-info").selectAll("p").text("");
       document.getElementById("price-over-year-container").style.display = "none";
     }
 
@@ -280,6 +280,7 @@ class MapVis {
       d3.select("#slider-range").select("svg").data([]).exit().remove();
       d3.select("#value-range").text("");
       d3.selectAll("button").remove();
+      d3.selectAll("p").text("");
     }
 
     function drawListingPoints(inputdata) {
@@ -334,7 +335,7 @@ class MapVis {
     }
 
     function showAvailability(avail) {
-      d3.select("#listing-avail").append("p").text("Listing availability out of the year: " + avail);
+      d3.select("p#avail-text").text("Listing availability out of the year: " + avail + " days");
       var colorScale = d3.scaleLinear().domain([0, 365]).range(["yellow", "green"]);
       var svg = d3.select("#listing-avail").append('svg')
         .attr("height", 50)
