@@ -25,7 +25,7 @@ class MapVis {
     var calendar_csv = "calendar_nyc.csv";
     var numlistings_csv = "num_listings_ny.csv";
     if (this.city === "Seattle") {
-      listings_csv = "listings_seattle.csv";
+      listings_csv = "listings_small_seattle.csv";
       numlistings_csv = "num_listings_seattle.csv";
       calendar_csv = "calendar_seattle.csv";
     } else if (this.city === "Austin") {
@@ -215,8 +215,8 @@ class MapVis {
 
     function handlePathClick(d) {
       if (active.node() === this) return reset();
-      d3.select("#slider-range").select("svg").data([]).exit().remove();
-      d3.selectAll("button").remove();
+      clearNeighborhoodInfo();
+      clearPreviousListing();
       d3.select(this).style("outline", "none");
       active.classed("active", false);
       active = d3.select(this).classed("active", true);
@@ -266,12 +266,20 @@ class MapVis {
         .data([])
         .exit()
         .remove();
-      d3.select("#slider-range").select("svg").data([]).exit().remove();
-      d3.select("#value-range").exit().remove();
+      clearPreviousListing();
+      clearNeighborhoodInfo();
+    }
+
+    function clearPreviousListing() {
       d3.select("#listing-avail").select("svg").data([]).exit().remove();
-      d3.selectAll("button").remove();
       d3.selectAll("p").text("");
       document.getElementById("price-over-year-container").style.display = "none";
+    }
+
+    function clearNeighborhoodInfo() {
+      d3.select("#slider-range").select("svg").data([]).exit().remove();
+      d3.select("#value-range").text("");
+      d3.selectAll("button").remove();
     }
 
     function drawListingPoints(inputdata) {
@@ -314,8 +322,7 @@ class MapVis {
 
     function handlePointClick(d) {
       // remove old point data
-      d3.select("#listing-avail").select("svg").data([]).exit().remove();
-      d3.selectAll("p").text("");
+      clearPreviousListing();
       // add new point data
       d3.select("#selection").text("Neighborhood: " + d[4]);
       d3.select("#listing-name").text("Listing name: " + d[5]);
@@ -418,6 +425,9 @@ class MapVis {
       var min = d3.min(nightsArray);
       var max = d3.max(nightsArray);
       var f = d3.format(',.2r');
+
+      d3.select('p#value-range')
+            .text("Minimum nights range: " + f(min) + "-" + f(max) + " nights");
       var sliderRange = simpleslider
         .sliderBottom()
         .min(min)

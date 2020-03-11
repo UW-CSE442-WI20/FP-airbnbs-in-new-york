@@ -1,8 +1,7 @@
 const d3 = require('d3');
 let HorizontalBarChart = require('./horizontalbarchart');
-const neighborhoodMap = d3.map();
 const colorPalette = ['#d3d3d3', '#e08984', '#bf809b', '#65c1cf', '#5374a6', '#776399'];
-let city = "New Yor"
+let city = "New York"
 
 class PieChartVis {
 
@@ -13,18 +12,22 @@ class PieChartVis {
 
         var listings_csv = "listings_small.csv"; // New York by default
         if (this.city === "Seattle") {
-            listings_csv = "listings_seattle.csv";
+            listings_csv = "listings_small_seattle.csv";
           } else if (this.city === "Austin") {
             listings_csv = "listings_small_austin.csv";
           } else if (this.city === "San Francisco") {
             listings_csv = "listings_small_sf.csv";
           } else if (this.city === "New Orleans") {
             listings_csv = "listings_small_nola.csv";
+          } else if (this.city == "Honoulu") {
+              listings_csv = "listings_hono.csv";
           }
 
           console.log("listings_csv : " + listings_csv);
           console.log("listings_csv : " + city);
 
+
+        // resetPieChartAndHorizontalBarChart();
 
         //options
         var options = {
@@ -47,10 +50,14 @@ class PieChartVis {
             }
         };
 
+        return self.setDoughnutChartData(listings_csv, options);
+
+
         function graphClickEvent(event, item) {
             var neighborhood = this.data.labels[item[0]._index];
             console.log("neighborhood : " + neighborhood);
             var propertyMap = d3.map();
+            console.log("graphClickEvent propertyMap : " + propertyMap);
             d3.csv(listings_csv)
                 .then((data) => {
                     data.forEach(function (d) {
@@ -64,26 +71,22 @@ class PieChartVis {
                             }
                         }
                     });
-                    console.log("starting horizontal bar map...");
-                    resetHorizontalBarChart();
+                    $("#horizontal-bar-chart-canvas").remove();
+                    $('#horizontal-bar-chart-container').append('<canvas id="horizontal-bar-chart-canvas"></canvas>');            
                     var horizontalBarChart = new HorizontalBarChart(propertyMap);
                 });
         };
-        return self.setDoughnutChartData(listings_csv, options);
-    }
-
-
-    resetHorizontalBarChart() {
-        $("#doughnut-chartcanvas-1").remove();// remove <canvas> element
-        $('#doughnut-chart-container').append('<canvas id="doughnut-chartcanvas-1"><canvas>');
 
     }
+
 
 
     // HELPER FUNCTION TO INITALIZE THE DATA
     setDoughnutChartData(listings_csv, options) {
         resetPieChart();
-        console.log("starting populating map...");
+        console.log("setDoughnutChartData listings_csv : " + listings_csv);
+        var neighborhoodMap = d3.map();
+
         d3.csv(listings_csv)
             .then((data) => {
                 data.forEach(function (d) {
@@ -96,8 +99,6 @@ class PieChartVis {
                     }
                 });
                 
-                // this.debuggingPrints();
-                // debugging prints
                 colors = generateColorArray(neighborhoodMap.keys().length);
 
                 //doughnut chart data
@@ -123,19 +124,14 @@ class PieChartVis {
                     data: chartData,
                     options: options
                 });
-
                 return chart;
             });
 
         function resetPieChart() {
             $("#doughnut-chartcanvas-1").remove();// remove <canvas> element
-            $('#doughnut-chart-container').append('<canvas id="doughnut-chartcanvas-1"><canvas>');
-            // canvas = document.querySelector('#doughnut-chartcanvas-1');
-            // ctx = canvas.getContext('2d');
-            // ctx.canvas.width = $('#doughnut-chart-container').width(); // resize to parent width
-            // ctx.canvas.height = $('#doughnut-chart-container').height(); // resize to parent height
+            $('#doughnut-chart-container').append('<canvas id="doughnut-chartcanvas-1"></canvas>');
         }
-
+    
         // Helper function to generate an array of colors for pie chart data
         function generateColorArray(length) {
             var colors = [];

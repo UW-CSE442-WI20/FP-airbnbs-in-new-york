@@ -14,7 +14,7 @@ nycount.then(function(value) {
 
 var ctx2 = document.getElementById('barchart-chartcanvas-2');
 var name2 = 'Seattle';
-const seattlecount = d3.csv("listings_seattle.csv").then(processData);
+const seattlecount = d3.csv("listings_small_seattle.csv").then(processData);
 seattlecount.then(function(value) {
     makeChart(value, ctx2, name2);
 });

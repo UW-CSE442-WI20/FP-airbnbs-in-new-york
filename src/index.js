@@ -14,9 +14,6 @@ const myMap = new MapVis("New York");
 const PieChart = require('./piechart');
 const mypiechart = new PieChart("New York");
 
-//get the doughnut chart canvas
-// var ctx1 = $("#doughnut-chartcanvas-1");
-
 
 // listings csv includes id, name, host_id, host_name, neighbourhood_group, neigbourhood,
 // latitude, longitude, room_type, price, minimum_nights, number_of_reviews, last_review,
