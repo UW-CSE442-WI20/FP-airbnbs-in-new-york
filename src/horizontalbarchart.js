@@ -28,10 +28,19 @@ class HorizontalBarChart {
         ]
       },
       options: {
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              fontSize: 13,
+              labelString: 'Counts'
+            }
+          }]
+        },
         legend: { display: false },
         title: {
           display: true,
-          text: 'Top Five Property Types in ' + neighbourhood,
+          text: neighbourhood + "\'s Top Five Property Types",
           fontSize: 20,
           fontColor: "#111"
         }

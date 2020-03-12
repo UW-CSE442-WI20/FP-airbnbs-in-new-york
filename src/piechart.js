@@ -39,7 +39,7 @@ class PieChartVis {
             title: {
                 display: true,
                 position: "top",
-                text: "Breakdown of Airbnb Listings in " + this.city,
+                text: this.city + "\'s Breakdown of Airbnb Listings",
                 fontSize: 25,
                 fontColor: "#111"
             },
