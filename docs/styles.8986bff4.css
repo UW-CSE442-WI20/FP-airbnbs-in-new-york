@@ -70,10 +70,11 @@ p {
 }
 
 #map-info {
-    text-align: left;
-    display: inline;
-    margin-left: 20px;
-    margin-right: 20px;
+    text-align: center;
+    display: inline-block;
+    margin-left: 5em;
+    margin-right: 5em;
 }
+
 
 /*# sourceMappingURL=/styles.8986bff4.css.map */
