@@ -85,10 +85,14 @@ class PieChartVis {
         console.log("setDoughnutChartData listings_csv : " + listings_csv);
         var neighbourhoodMap = d3.map();
 
+        
+
         d3.csv(listings_csv)
             .then((data) => {
                 data.forEach(function (d) {
                     let key = d.neighbourhood_group;
+
+                    console.log("key : " + key);
 
                     if (neighbourhoodMap.has(key)) {
                         var value = neighbourhoodMap.get(key);

@@ -51,6 +51,7 @@ class HorizontalBarChart {
   }
 
   sortMapByValuesAndTopListings(propertyMap) {
+    TOPLISTINGS = 5;
     var arrayLabel = propertyMap.keys();
     var arrayData = propertyMap.values();
 
@@ -73,12 +74,14 @@ class HorizontalBarChart {
     });
     var newMap = d3.map();
     for (var i = 0; i < TOPLISTINGS; i++) {
-      newMap.set(newArrayLabel[i], newArrayData[i]);
+      if (newArrayLabel[i] == 'NA') {
+        TOPLISTINGS++;
+      } else {
+        newMap.set(newArrayLabel[i], newArrayData[i]);
+      }
     }
     return newMap;
   }
-
-
 }
 
 module.exports = HorizontalBarChart;
