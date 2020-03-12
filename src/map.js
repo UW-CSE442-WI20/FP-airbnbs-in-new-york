@@ -16,6 +16,7 @@ let pricesMap = d3.map();
 let austinZipCodes = d3.map();
 var active = d3.select(null);
 let city = "New York"; // default
+const mapInstructions = "Click on a neighborhood to explore listings in that area! Keep exploring by clicking on another neighborhood, or click anywhere else to zoom out.";
 
 class MapVis {
   constructor(city) {
@@ -51,6 +52,7 @@ class MapVis {
       calendar_csv = "calendar_hono.csv";
     }
     d3.select("#city-name").text("Map of Airbnbs in " + this.city).style("font-weight", "bold");
+    d3.select("#map-info").text(mapInstructions);
     d3.csv(listings_csv)
       .then((data) => {
         data.forEach(function (d) {
@@ -308,6 +310,7 @@ class MapVis {
         .remove();
       clearPreviousListing();
       clearNeighborhoodInfo();
+      d3.select("#map-info").text(mapInstructions);
     }
 
     function clearPreviousListing() {
@@ -315,6 +318,7 @@ class MapVis {
       d3.select("#listing-info").selectAll("p").text("");
       document.getElementById("price-over-year-container").style.display = "none";
       d3.selectAll("button").remove();
+      d3.selectAll("#map-info").text("");
     }
 
     function clearNeighborhoodInfo() {
@@ -322,6 +326,7 @@ class MapVis {
       d3.select("#value-range").text("");
       d3.selectAll("button").remove();
       d3.selectAll("p").text("");
+      d3.selectAll("#map-info").text("");
     }
 
     function drawListingPoints(inputdata) {
