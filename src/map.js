@@ -130,6 +130,8 @@ class MapVis {
     console.log("min listings: " + minNumListings + " max listings: " + maxNumListings);
     //var colorScale = d3.scaleQuantize().domain([minNumListings, maxNumListings]).range(d3.schemePurples[6]);
     var colorScale = d3.scaleLinear().domain([minNumListings, maxNumListings]).range([d3.interpolatePurples(0.3), d3.interpolatePurples(1)]);
+    //var colorScale = d3.scaleLinear().domain([minNumListings, maxNumListings]).range(["#ffc7c9", "#e3363c"]);
+    
     drawLegend();
     d3.select("#map-svg").append("rect")
       .attr("class", "background")
@@ -374,7 +376,7 @@ class MapVis {
 
     function showAvailability(avail) {
       d3.select("p#avail-text").text("Listing availability out of the year: " + avail + " days");
-      var colorScale = d3.scaleLinear().domain([0, 365]).range(["yellow", "green"]);
+      var colorScale = d3.scaleLinear().domain([0, 365]).range(["yellow", "#00a699"]);
       var svg = d3.select("#listing-avail").append('svg')
         .attr("height", 50)
         .attr("width", 500)
