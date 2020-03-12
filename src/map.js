@@ -50,7 +50,7 @@ class MapVis {
       numlistings_csv = "num_listings_hono.csv";
       calendar_csv = "calendar_hono.csv";
     }
-    d3.select("#city-name").text("Map of the Airbnbs in " + this.city).style("font-weight", "bold");
+    d3.select("#city-name").text("Map of Airbnbs in " + this.city).style("font-weight", "bold");
     d3.csv(listings_csv)
       .then((data) => {
         data.forEach(function (d) {
@@ -400,9 +400,9 @@ class MapVis {
       d3.select("p#avail-text").text("Listing availability out of the year: " + avail + " days");
       var colorScale = d3.scaleLinear().domain([0, 365]).range(["yellow", "#00a699"]);
       var svg = d3.select("#listing-avail").append('svg')
-        .attr("height", 50)
+        .attr("height", 20)
         .attr("width", 500)
-        .attr('transform', 'translate(70,30)');
+        .attr('transform', 'translate(70,0)');
       svg.append('rect')
         .attr('class', 'bg-rect')
         .attr('rx', 10)
@@ -519,9 +519,9 @@ class MapVis {
         .select('div#slider-range')
         .append('svg')
         .attr('width', 500)
-        .attr('height', 100)
+        .attr('height', 70)
         .append('g')
-        .attr('transform', 'translate(70,30)');
+        .attr('transform', 'translate(70,10)');
 
       gRange.call(sliderRange);
     }
