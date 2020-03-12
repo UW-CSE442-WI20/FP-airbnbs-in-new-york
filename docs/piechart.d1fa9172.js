@@ -28894,23 +28894,28 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var d3 = require('d3');
 
 var TOPLISTINGS = 5;
+var colorPalette = ['#d3d3d3', '#e08984', '#bf809b', '#65c1cf', '#5374a6', '#776399'];
 
 var HorizontalBarChart =
 /*#__PURE__*/
 function () {
-  function HorizontalBarChart(context, propertyMap) {
+  function HorizontalBarChart(propertyMap) {
     _classCallCheck(this, HorizontalBarChart);
 
-    var colorArray = this.generateColorArray(propertyMap.keys().length);
-    var map = this.sortMapByValuesAndTopListings(propertyMap);
+    var self = this;
+    var propertyMap = self.sortMapByValuesAndTopListings(propertyMap);
+    console.log("keys :" + propertyMap.keys());
+    console.log("values :" + propertyMap.values());
+    var colors = self.generateColorArray(propertyMap.keys().length);
+    var context = $("#horizontal-bar-chart-canvas");
     var barChart = new Chart(context, {
       type: 'horizontalBar',
       data: {
-        labels: map.keys(),
+        labels: propertyMap.keys(),
         datasets: [{
-          label: "Population",
-          backgroundColor: colorArray,
-          data: map.values()
+          label: "Population (millions)",
+          backgroundColor: colors,
+          data: propertyMap.values()
         }]
       },
       options: {
@@ -28919,14 +28924,30 @@ function () {
         },
         title: {
           display: true,
-          text: 'Number of Listings'
+          text: 'Predicted world population (millions) in 2050'
         }
       }
     });
     return barChart;
-  }
+  } // Helper function to generate an array of colors for pie chart data
+
 
   _createClass(HorizontalBarChart, [{
+    key: "generateColorArray",
+    value: function generateColorArray(length) {
+      var colors = [];
+
+      while (colors.length < length) {
+        do {
+          var color = Math.floor(Math.random() * 1000000 + 1);
+        } while (colors.indexOf(color) >= 0);
+
+        colors.push("#" + ("000000" + color.toString(16)).slice(-6));
+      }
+
+      return colors;
+    }
+  }, {
     key: "sortMapByValuesAndTopListings",
     value: function sortMapByValuesAndTopListings(propertyMap) {
       var arrayLabel = propertyMap.keys();
@@ -28953,22 +28974,6 @@ function () {
       }
 
       return newMap;
-    } // Helper function to generate an array of colors for pie chart data
-
-  }, {
-    key: "generateColorArray",
-    value: function generateColorArray(length) {
-      var colors = [];
-
-      while (colors.length < length) {
-        do {
-          var color = Math.floor(Math.random() * 1000000 + 1);
-        } while (colors.indexOf(color) >= 0);
-
-        colors.push("#" + ("000000" + color.toString(16)).slice(-6));
-      }
-
-      return colors;
     }
   }]);
 
@@ -28983,16 +28988,12 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var d3 = require('d3'); // export class HorizontalBarChart {...}
-
+var d3 = require('d3');
 
 var HorizontalBarChart = require('./horizontalbarchart');
 
 var colorPalette = ['#d3d3d3', '#e08984', '#bf809b', '#65c1cf', '#5374a6', '#776399'];
-var neighborhoodMap = d3.map();
-var city = "New York"; // default
-
-var listings_csv = "listings_small.csv"; // default
+var city = "New York";
 
 var PieChartVis =
 /*#__PURE__*/
@@ -29000,7 +29001,25 @@ function () {
   function PieChartVis(city) {
     _classCallCheck(this, PieChartVis);
 
-    var self = this; //options
+    var self = this;
+    this.city = city;
+    var listings_csv = "listings_small.csv"; // New York by default
+
+    if (this.city === "Seattle") {
+      listings_csv = "listings_small_seattle.csv";
+    } else if (this.city === "Austin") {
+      listings_csv = "listings_small_austin.csv";
+    } else if (this.city === "San Francisco") {
+      listings_csv = "listings_small_sf.csv";
+    } else if (this.city === "New Orleans") {
+      listings_csv = "listings_small_nola.csv";
+    } else if (this.city == "Honoulu") {
+      listings_csv = "listings_hono.csv";
+    }
+
+    console.log("listings_csv : " + listings_csv);
+    console.log("listings_csv : " + city); // resetPieChartAndHorizontalBarChart();
+    //options
 
     var options = {
       onClick: graphClickEvent,
@@ -29021,30 +29040,14 @@ function () {
         }
       }
     };
-    this.city = city;
-    this.listings_csv = "listings_small.csv";
-    ;
-
-    if (this.city === "Seattle") {
-      this.listings_csv = "listings_seattle.csv";
-    } else if (this.city === "Austin") {
-      this.listings_csv = "listings_small_austin.csv";
-    } else if (this.city === "San Francisco") {
-      this.listings_csv = "listings_small_sf.csv";
-    } else if (this.city === "New Orleans") {
-      this.listings_csv = "listings_small_nola.csv";
-    } // add honoulu
-
-
-    console.log("city: " + this.city);
-    console.log("lisiting csv : " + this.listings_csv);
+    return self.setDoughnutChartData(listings_csv, options);
 
     function graphClickEvent(event, item) {
-      var neighborhood = this.data.labels[item[0]._index]; // console.log("neighborhood : " + neighborhood);
-
-      console.log("starting horizontal bar map...");
+      var neighborhood = this.data.labels[item[0]._index];
+      console.log("neighborhood : " + neighborhood);
       var propertyMap = d3.map();
-      d3.csv(this.listings_csv).then(function (data) {
+      console.log("graphClickEvent propertyMap : " + propertyMap);
+      d3.csv(listings_csv).then(function (data) {
         data.forEach(function (d) {
           if (d.neighbourhood_group == neighborhood) {
             var key = d.property_type;
@@ -29057,50 +29060,22 @@ function () {
             }
           }
         });
-        propertyMap = sortMapByValues(propertyMap);
-
-        function sortMapByValues(propertyMap) {
-          var arrayLabel = propertyMap.keys();
-          var arrayData = propertyMap.values();
-          arrayOfObj = arrayLabel.map(function (d, i) {
-            return {
-              label: d,
-              data: arrayData[i] || 0
-            };
-          });
-          sortedArrayOfObj = arrayOfObj.sort(function (a, b) {
-            return b.data - a.data;
-          });
-          newArrayLabel = [];
-          newArrayData = [];
-          sortedArrayOfObj.forEach(function (d) {
-            newArrayLabel.push(d.label);
-            newArrayData.push(d.data);
-          });
-          var map = d3.map();
-
-          for (var i = 0; i < newArrayLabel.length; i++) {
-            map.set(newArrayLabel[i], newArrayData[i]);
-          }
-
-          return map;
-        }
-
-        var ctx = $("#horizontal-bar-chart-canvas");
-        var horizontalBarChart = new HorizontalBarChart(ctx, propertyMap);
+        $("#horizontal-bar-chart-canvas").remove();
+        $('#horizontal-bar-chart-container').append('<canvas id="horizontal-bar-chart-canvas"></canvas>');
+        var horizontalBarChart = new HorizontalBarChart(propertyMap);
       });
     }
 
     ;
-    return this.setDoughnutChartData(listings_csv, options);
   } // HELPER FUNCTION TO INITALIZE THE DATA
 
 
   _createClass(PieChartVis, [{
     key: "setDoughnutChartData",
     value: function setDoughnutChartData(listings_csv, options) {
-      var context = $("#doughnut-chartcanvas-1");
-      console.log("starting populating map...");
+      resetPieChart();
+      console.log("setDoughnutChartData listings_csv : " + listings_csv);
+      var neighborhoodMap = d3.map();
       d3.csv(listings_csv).then(function (data) {
         data.forEach(function (d) {
           var key = d.neighbourhood_group;
@@ -29111,18 +29086,22 @@ function () {
           } else {
             neighborhoodMap.set(key, 1);
           }
-        }); //doughnut chart data
+        });
+        colors = generateColorArray(neighborhoodMap.keys().length); //doughnut chart data
 
         var chartData = {
           labels: neighborhoodMap.keys(),
           datasets: [{
             label: "TeamA Score",
             data: neighborhoodMap.values(),
-            backgroundColor: colorPalette,
-            borderColor: colorPalette,
+            // backgroundColor: colorPalette,
+            // borderColor: colorPalette,
+            backgroundColor: colors,
+            borderColor: colors,
             borderWidth: Array(neighborhoodMap.keys().length).fill(1)
           }]
-        }; //create Chart class object
+        };
+        var context = $("#doughnut-chartcanvas-1"); //create Chart class object
 
         var chart = new Chart(context, {
           type: "doughnut",
@@ -29131,15 +29110,27 @@ function () {
         });
         return chart;
       });
-    } // Helper method : debugg prints
 
-  }, {
-    key: "debuggingPrints",
-    value: function debuggingPrints() {
-      console.log("keys : " + neighborhoodMap.keys());
-      console.log("keys length : " + neighborhoodMap.keys().length);
-      console.log("values : " + neighborhoodMap.values());
-      console.log("values length : " + neighborhoodMap.values().length);
+      function resetPieChart() {
+        $("#doughnut-chartcanvas-1").remove(); // remove <canvas> element
+
+        $('#doughnut-chart-container').append('<canvas id="doughnut-chartcanvas-1"></canvas>');
+      } // Helper function to generate an array of colors for pie chart data
+
+
+      function generateColorArray(length) {
+        var colors = [];
+
+        while (colors.length < length) {
+          do {
+            var color = Math.floor(Math.random() * 1000000 + 1);
+          } while (colors.indexOf(color) >= 0);
+
+          colors.push("#" + ("000000" + color.toString(16)).slice(-6));
+        }
+
+        return colors;
+      }
     }
   }]);
 
@@ -29175,7 +29166,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61308" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52379" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
