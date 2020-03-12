@@ -202,7 +202,7 @@ function makeChart(count, ctx, name, scale) {
                 var myPieChart = new PieChartVis(selectedCity);
                 $("#horizontal-bar-chart-canvas").remove();
                 $('#horizontal-bar-chart-container').append('<canvas id="horizontal-bar-chart-canvas"></canvas>');  
-
+                window.location = "index.html#map"
             }
         }
     });
