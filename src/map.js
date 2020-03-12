@@ -253,6 +253,8 @@ class MapVis {
       });
     }
 
+    var largerCircles = "small";
+
     function handlePathClick(d) {
       if (active.node() === this) return reset();
       clearNeighborhoodInfo();
@@ -273,6 +275,15 @@ class MapVis {
         y = (bounds[0][1] + bounds[1][1]) / 2,
         scale = 0.5 / Math.max(dx / mapWidth, dy / mapHeight),
         translate = [mapWidth / 2 - scale * x, mapHeight / 2 - scale * y];
+
+      console.log("dx: " + dx);
+      console.log("dy: " + dy);
+
+      if (dx > 150 || dy > 150) {
+          largerCircles = "large";
+      } else if (dx > 80 || dy > 80) {
+          largerCircles = "medium";
+      }
 
       d3.select("#map-svg").transition()
         .duration(750)
@@ -336,7 +347,15 @@ class MapVis {
           let datum = [d[0], d[1]];
           return projection(datum)[1];
         })
-        .attr("r", "0.7px")
+        .attr("r", function(d) {
+            if (largerCircles == "small") {
+                return "0.07em";
+            } else if (largerCircles == "medium") {
+                return "0.12em";
+            } else {
+                return "0.18em";
+            }
+        })
         .attr("fill", function (d) {
           if (currentCity === "New York") {
             if (d[3] <= 1881586) {
@@ -421,7 +440,7 @@ class MapVis {
             {
               label: "Price ($USD)",
               data: pricesOverMonths,
-              backgroundColor: "rgba(0,51,102,0.3)",
+              backgroundColor: "rgba(0,166,153,0.3)",
               strokeColor: "rgba(151,187,205,1)",
               pointColor: "rgba(151,187,205,1)",
               pointStrokeColor: "#fff",
