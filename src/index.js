@@ -15,7 +15,7 @@ const PieChart = require('./piechart');
 const mypiechart = new PieChart("New York");
 var index = 0;
 
-//draw canvas
+//draw airbnb logo
 var svgContainer = d3.select(".logo")
         .append("svg")
         .attr("width", 700)
@@ -46,16 +46,15 @@ var svgContainer = d3.select(".logo")
     for (var i = 40; i > 10; i--) {
     	x = i;
     	y = Math.sqrt(radius*radius - (x*x));
-        drawCircles(xCoord + x, yCoord + y)
-        radius  = radius + 0.5;
-
+        drawCircles(xCoord + x, yCoord + y - 3)
+        radius  = radius + 0.75;
     }
     xCoord = xCoord + x;
-    yCoord = yCoord + y;
+    yCoord = yCoord + y - 3;
 
-    for(var i = 0; i < 32; i++){
+    for(var i = 0; i < 31; i++){
     	var x = i;
-    	var y = 1.1 * x;
+    	var y = 1.0 * x;
         drawCircles(xCoord - x, yCoord + y)
     }
 
@@ -74,26 +73,33 @@ var svgContainer = d3.select(".logo")
         radius  = radius - 0.5;
 
     }
+    yCoord = yCoord + 15;
+    for (var i = -20; i < -15; i++) {
+    	x = i;
+    	y = Math.sqrt(radius*radius - (x*x));
+        drawCircles(xCoord + x, yCoord - y)
+        radius  = radius + 1.8;
+    }
+
     xCoord = xCoord + x;
-    yCoord = yCoord + y;
+    yCoord = yCoord - y;
 
     for(var i = 0; i < 60; i++){
     	var x = i;
-    	var y = 2.75*x;
+    	var y = 2.85*x;
        	drawCircles(xCoord + x, yCoord - y)
     }
 
 
     xCoord = 350;
-    yCoord = 280 - 100;
+    yCoord = 155;
 
-    radius = 43;
-    for (var i = -42; i < -5; i++) {
+    radius = 39;
+    for (var i = -37; i < -5; i++) {
     	x = i;
     	y = Math.sqrt(radius*radius - (x*x));
         radius  = radius - 0.25; 
-        drawCircles(xCoord + x, yCoord - y)
-
+        drawCircles(xCoord + x, yCoord - y);
     }
     xCoord = xCoord + x;
     yCoord = yCoord - y;
@@ -115,15 +121,15 @@ function drawCircles(x, y){
             .attr("cy", y)
             .attr("r", 8)
             .style("opacity", 0)
-            .style("fill", "#FF5A5F")
-    circle  // wait 2 seconds, then slowly change the circle's properties
+            .style("fill", "#FF5A5F")         
+    circle  // adds circle by circle after delay
 	.transition()
-	.delay(1000 + index*20)
+	.delay(2000 + index*15)
 	.style('opacity',1)
 	index ++;
-	circleMirror  // wait 2 seconds, then slowly change the circle's properties
+	circleMirror  // adds circle by for mirror circle after delay
 	.transition()
-	.delay(1000 + index*20)
+	.delay(2000 + index*15)
 	.style('opacity',1)
 	index ++;
 }
