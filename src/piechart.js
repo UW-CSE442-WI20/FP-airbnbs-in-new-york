@@ -3,13 +3,13 @@ let HorizontalBarChart = require('./horizontalbarchart');
 const colorPalette = ['#d3d3d3', '#e08984', '#bf809b', '#65c1cf', '#5374a6', '#776399'];
 let city = "New York"
 
-
 class PieChartVis {
 
 
     constructor(city) {
         var self = this;
         this.city = city;
+
 
         var listings_csv = "listings_small.csv"; // New York by default        
         if (this.city === "Seattle") {
@@ -20,7 +20,7 @@ class PieChartVis {
             listings_csv = "listings_small_sf.csv";
         } else if (this.city === "New Orleans") {
             listings_csv = "listings_small_nola.csv";
-        } else if (this.city == "Honoulu") {
+        } else if (this.city == "Honolulu") { // use neighborhoods
             listings_csv = "listings_hono.csv";
         }
 
@@ -52,14 +52,16 @@ class PieChartVis {
         return self.setDoughnutChartData(listings_csv, options);
 
         function graphClickEvent(event, item) {
-            var neighborhood = this.data.labels[item[0]._index];
-            console.log("neighborhood : " + neighborhood);
+            var neighbourhood = this.data.labels[item[0]._index];
+            console.log("neighborhood : " + neighbourhood);
             var propertyMap = d3.map();
             console.log("graphClickEvent propertyMap : " + propertyMap);
             d3.csv(listings_csv)
                 .then((data) => {
                     data.forEach(function (d) {
-                        if (d.neighbourhood_group == neighborhood) {
+
+                        // if use neighborhoods or use neighbourhood_group                    
+                        if (d.neighbourhood_group == neighbourhood) {
                             let key = d.property_type;
                             if (propertyMap.has(key)) {
                                 var value = propertyMap.get(key);
@@ -75,41 +77,39 @@ class PieChartVis {
                 });
         };
     }
-
-
-
     // HELPER FUNCTION TO INITALIZE THE DATA
     setDoughnutChartData(listings_csv, options) {
         resetPieChart();
         console.log("setDoughnutChartData listings_csv : " + listings_csv);
-        var neighborhoodMap = d3.map();
+        var neighbourhoodMap = d3.map();
 
         d3.csv(listings_csv)
             .then((data) => {
                 data.forEach(function (d) {
                     let key = d.neighbourhood_group;
-                    if (neighborhoodMap.has(key)) {
-                        var value = neighborhoodMap.get(key);
-                        neighborhoodMap.set(key, value + 1);
+
+                    if (neighbourhoodMap.has(key)) {
+                        var value = neighbourhoodMap.get(key);
+                        neighbourhoodMap.set(key, value + 1);
                     } else {
-                        neighborhoodMap.set(key, 1);
+                        neighbourhoodMap.set(key, 1);
                     }
                 });
                 
-                colors = generateColorArray(neighborhoodMap.keys().length);
+                colors = generateColorArray(neighbourhoodMap.keys().length);
 
                 //doughnut chart data
                 let chartData = {
-                    labels: neighborhoodMap.keys(),
+                    labels: neighbourhoodMap.keys(),
                     datasets: [
                         {
                             label: "TeamA Score",
-                            data: neighborhoodMap.values(),
+                            data: neighbourhoodMap.values(),
                             // backgroundColor: colorPalette,
                             // borderColor: colorPalette,
                             backgroundColor: colors,
                             borderColor: colors,
-                            borderWidth: Array(neighborhoodMap.keys().length).fill(1)
+                            borderWidth: Array(neighbourhoodMap.keys().length).fill(1)
                         }
                     ]
                 };
