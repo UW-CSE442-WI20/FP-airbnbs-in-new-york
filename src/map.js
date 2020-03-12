@@ -198,7 +198,7 @@ class MapVis {
         var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
         return colorScale(numlistings);
       })
-      .style("stroke", "#9e9d9d") // set outline to be gray
+      .style("stroke", "white") // set outline to be gray
       .on("mouseover", handleMouseOver)
       .on("mouseout", handleMouseOut)
       .on("click", handlePathClick);

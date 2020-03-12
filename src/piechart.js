@@ -3,6 +3,7 @@ let HorizontalBarChart = require('./horizontalbarchart');
 const colorPalette = ['#d3d3d3', '#e08984', '#bf809b', '#65c1cf', '#5374a6', '#776399'];
 let city = "New York"
 
+
 class PieChartVis {
 
 
@@ -10,24 +11,22 @@ class PieChartVis {
         var self = this;
         this.city = city;
 
-        var listings_csv = "listings_small.csv"; // New York by default
+        var listings_csv = "listings_small.csv"; // New York by default        
         if (this.city === "Seattle") {
             listings_csv = "listings_small_seattle.csv";
-          } else if (this.city === "Austin") {
+        } else if (this.city === "Austin") {
             listings_csv = "listings_small_austin.csv";
-          } else if (this.city === "San Francisco") {
+        } else if (this.city === "San Francisco") {
             listings_csv = "listings_small_sf.csv";
-          } else if (this.city === "New Orleans") {
+        } else if (this.city === "New Orleans") {
             listings_csv = "listings_small_nola.csv";
-          } else if (this.city == "Honoulu") {
-              listings_csv = "listings_hono.csv";
-          }
+        } else if (this.city == "Honoulu") {
+            listings_csv = "listings_hono.csv";
+        }
 
           console.log("listings_csv : " + listings_csv);
           console.log("listings_csv : " + city);
 
-
-        // resetPieChartAndHorizontalBarChart();
 
         //options
         var options = {
@@ -52,7 +51,6 @@ class PieChartVis {
 
         return self.setDoughnutChartData(listings_csv, options);
 
-
         function graphClickEvent(event, item) {
             var neighborhood = this.data.labels[item[0]._index];
             console.log("neighborhood : " + neighborhood);
@@ -76,7 +74,6 @@ class PieChartVis {
                     var horizontalBarChart = new HorizontalBarChart(propertyMap);
                 });
         };
-
     }
 
 
@@ -141,7 +138,7 @@ class PieChartVis {
                 } while (colors.indexOf(color) >= 0);
                 colors.push("#" + ("000000" + color.toString(16)).slice(-6));
             }
-            return colors
+            return colors;
         }
     
 
