@@ -255,7 +255,7 @@ class MapVis {
       });
     }
 
-    var largerCircles = "small";
+    var circleSize = "small";
 
     function handlePathClick(d) {
       if (active.node() === this) return reset();
@@ -281,10 +281,14 @@ class MapVis {
       console.log("dx: " + dx);
       console.log("dy: " + dy);
 
-      if (dx > 150 || dy > 150) {
-          largerCircles = "large";
-      } else if (dx > 80 || dy > 80) {
-          largerCircles = "medium";
+      if (dx < 30 || dy < 30) {
+          circleSize = "tiny";
+      } else if (dx < 80 || dy < 80) {
+          circleSize = "small";
+      } else if (dx < 150 || dy < 150) {
+          circleSize = "medium";
+      } else {
+          circleSize = "large";
       }
 
       d3.select("#map-svg").transition()
@@ -354,9 +358,12 @@ class MapVis {
           return projection(datum)[1];
         })
         .attr("r", function(d) {
-            if (largerCircles == "small") {
+            if (circleSize == "tiny") {
+                return "0.03em";
+            }
+            else if (circleSize == "small") {
                 return "0.07em";
-            } else if (largerCircles == "medium") {
+            } else if (circleSize == "medium") {
                 return "0.12em";
             } else {
                 return "0.18em";
