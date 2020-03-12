@@ -16,6 +16,7 @@ let pricesMap = d3.map();
 let austinZipCodes = d3.map();
 var active = d3.select(null);
 let city = "New York"; // default
+const mapInstructions = "Click on a neighborhood to explore listings in that area! Keep exploring by clicking on another neighborhood, or click anywhere else to zoom out.";
 
 class MapVis {
   constructor(city) {
@@ -50,7 +51,8 @@ class MapVis {
       numlistings_csv = "num_listings_hono.csv";
       calendar_csv = "calendar_hono.csv";
     }
-    d3.select("#city-name").text("Map of the Airbnbs in " + this.city).style("font-weight", "bold");
+    d3.select("#city-name").text("Map of Airbnbs in " + this.city).style("font-weight", "bold");
+    d3.select("#map-info").text(mapInstructions);
     d3.csv(listings_csv)
       .then((data) => {
         data.forEach(function (d) {
@@ -112,12 +114,12 @@ class MapVis {
         var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
         var tooltipText = '';
         if (currentCity == 'New York') {
-            tooltipText = 'Neighborhood: ' + this.id + '<br>' +
-              'Borough: ' + d.properties.neighbourhood_group +
-              '<br> Number of listings: ' + numlistings;
+          tooltipText = 'Neighborhood: ' + this.id + '<br>' +
+            'Borough: ' + d.properties.neighbourhood_group +
+            '<br> Number of listings: ' + numlistings;
         } else {
-            tooltipText = 'Neighborhood: ' + this.id +
-              '<br> Number of listings: ' + numlistings;
+          tooltipText = 'Neighborhood: ' + this.id +
+            '<br> Number of listings: ' + numlistings;
         }
         return tooltipText;
       }
@@ -131,7 +133,7 @@ class MapVis {
     //var colorScale = d3.scaleQuantize().domain([minNumListings, maxNumListings]).range(d3.schemePurples[6]);
     var colorScale = d3.scaleLinear().domain([minNumListings, maxNumListings]).range([d3.interpolatePurples(0.3), d3.interpolatePurples(1)]);
     //var colorScale = d3.scaleLinear().domain([minNumListings, maxNumListings]).range(["#ffc7c9", "#e3363c"]);
-    
+
     drawLegend();
     d3.select("#map-svg").append("rect")
       .attr("class", "background")
@@ -196,7 +198,7 @@ class MapVis {
         var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
         return colorScale(numlistings);
       })
-      .style("stroke", "#9e9d9d") // set outline to be gray
+      .style("stroke", "white") // set outline to be gray
       .on("mouseover", handleMouseOver)
       .on("mouseout", handleMouseOut)
       .on("click", handlePathClick);
@@ -208,34 +210,34 @@ class MapVis {
       var defs = svg.append("defs");
 
       var gradient = defs.append("linearGradient")
-      .attr("id", "svgGradient")
-      .attr("x1", "100%")
-      .attr("x2", "100%")
-      .attr("y1", "0%")
-      .attr("y2", "100%");
+        .attr("id", "svgGradient")
+        .attr("x1", "100%")
+        .attr("x2", "100%")
+        .attr("y1", "0%")
+        .attr("y2", "100%");
 
       gradient.append("stop")
-      .attr('class', 'start')
-      .attr("offset", "0%")
-      .attr("stop-color", d3.interpolatePurples(1))
-      .attr("stop-opacity", 1);
+        .attr('class', 'start')
+        .attr("offset", "0%")
+        .attr("stop-color", d3.interpolatePurples(1))
+        .attr("stop-opacity", 1);
 
       gradient.append("stop")
-      .attr('class', 'end')
-      .attr("offset", "100%")
-      .attr("stop-color", d3.interpolatePurples(0.3))
-      .attr("stop-opacity", 1);
+        .attr('class', 'end')
+        .attr("offset", "100%")
+        .attr("stop-color", d3.interpolatePurples(0.3))
+        .attr("stop-opacity", 1);
 
       var legend = svg.append("rect")
-              .attr("width", 40)
-              .attr("height", 300)
-              .attr("fill", "url(#svgGradient)")
-              .attr("stroke", "#9e9d9d");
+        .attr("width", 40)
+        .attr("height", 300)
+        .attr("fill", "url(#svgGradient)")
+        .attr("stroke", "#9e9d9d");
       var label = d3.scaleLinear().range([300, 0]).domain([minNumListings, maxNumListings]);
       var legendLabels = d3.axisRight(label);
       svg.append("g")
-                .attr("class", "axisWhite")
-                .call(legendLabels);
+        .attr("class", "axisWhite")
+        .call(legendLabels);
     }
 
     // Display the neighborhood and borough name on mouseover
@@ -252,6 +254,8 @@ class MapVis {
         return colorScale(numlistings);
       });
     }
+
+    var largerCircles = "small";
 
     function handlePathClick(d) {
       if (active.node() === this) return reset();
@@ -274,12 +278,21 @@ class MapVis {
         scale = 0.5 / Math.max(dx / mapWidth, dy / mapHeight),
         translate = [mapWidth / 2 - scale * x, mapHeight / 2 - scale * y];
 
+      console.log("dx: " + dx);
+      console.log("dy: " + dy);
+
+      if (dx > 150 || dy > 150) {
+          largerCircles = "large";
+      } else if (dx > 80 || dy > 80) {
+          largerCircles = "medium";
+      }
+
       d3.select("#map-svg").transition()
         .duration(750)
         .style("stroke-width", "0.5px")
         .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
-      drawListingPoints(neighborhoodListings.get(this.id));
 
+      drawListingPoints(neighborhoodListings.get(this.id));
       showSlider(this.id);
       showRoomTypeFilter(this.id);
       var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
@@ -308,12 +321,15 @@ class MapVis {
         .remove();
       clearPreviousListing();
       clearNeighborhoodInfo();
+      d3.select("#map-info").text(mapInstructions);
     }
 
     function clearPreviousListing() {
       d3.select("#listing-avail").select("svg").data([]).exit().remove();
       d3.select("#listing-info").selectAll("p").text("");
       document.getElementById("price-over-year-container").style.display = "none";
+      d3.selectAll("button").remove();
+      d3.selectAll("#map-info").text("");
     }
 
     function clearNeighborhoodInfo() {
@@ -321,6 +337,7 @@ class MapVis {
       d3.select("#value-range").text("");
       d3.selectAll("button").remove();
       d3.selectAll("p").text("");
+      d3.selectAll("#map-info").text("");
     }
 
     function drawListingPoints(inputdata) {
@@ -336,7 +353,15 @@ class MapVis {
           let datum = [d[0], d[1]];
           return projection(datum)[1];
         })
-        .attr("r", "0.7px")
+        .attr("r", function(d) {
+            if (largerCircles == "small") {
+                return "0.07em";
+            } else if (largerCircles == "medium") {
+                return "0.12em";
+            } else {
+                return "0.18em";
+            }
+        })
         .attr("fill", function (d) {
           if (currentCity === "New York") {
             if (d[3] <= 1881586) {
@@ -362,8 +387,11 @@ class MapVis {
     }
 
     function handlePointClick(d) {
+      var data = d;
+      console.log(data);
       // remove old point data
       clearPreviousListing();
+      clearNeighborhoodInfo();
       // add new point data
       d3.select("#selection").text("Neighborhood: " + d[4]);
       d3.select("#listing-name").text("Listing name: " + d[5]);
@@ -372,15 +400,33 @@ class MapVis {
       d3.select(this).classed("active-point", true);
       showAvailability(d[6]);
       displayPriceOverYear(d);
+      d3.select("#go-back").append("button")
+        .text("< Back to neighborhood filters")
+        .attr("id", "neighborhood-back-button")
+        .attr("class", "btn btn-outline-info btn-sm")
+        .lower()
+        .on("click", () => {
+          clearPreviousListing();
+          drawListingPoints(neighborhoodListings.get(data[4]));
+          showSlider(data[4]);
+          showRoomTypeFilter(data[4]);
+          var numlistings = neighborhoodCt.get(data[4]) == undefined ? 0 : neighborhoodCt.get(data[4]);
+          if (city == "Austin") {
+            d3.select("#selection").text("General Neighborhood: " + austinZipCodes.get(data[4]) + ", Zip Code: " + data[4]);
+          } else {
+            d3.select("#selection").text("Neighborhood: " + data[4]);
+          }
+          d3.select("#total-listings").text("Total number of listings in this neighborhood: " + numlistings);
+        });
     }
 
     function showAvailability(avail) {
       d3.select("p#avail-text").text("Listing availability out of the year: " + avail + " days");
       var colorScale = d3.scaleLinear().domain([0, 365]).range(["yellow", "#00a699"]);
       var svg = d3.select("#listing-avail").append('svg')
-        .attr("height", 50)
+        .attr("height", 20)
         .attr("width", 500)
-        .attr('transform', 'translate(70,30)');
+        .attr('transform', 'translate(70,0)');
       svg.append('rect')
         .attr('class', 'bg-rect')
         .attr('rx', 10)
@@ -421,7 +467,7 @@ class MapVis {
             {
               label: "Price ($USD)",
               data: pricesOverMonths,
-              backgroundColor: "rgba(0,51,102,0.3)",
+              backgroundColor: "rgba(0,166,153,0.3)",
               strokeColor: "rgba(151,187,205,1)",
               pointColor: "rgba(151,187,205,1)",
               pointStrokeColor: "#fff",
@@ -468,7 +514,7 @@ class MapVis {
       var f = d3.format(',.2r');
 
       d3.select('p#value-range')
-            .text("Minimum nights range: " + f(min) + "-" + f(max) + " nights");
+        .text("Minimum nights range: " + f(min) + "-" + f(max) + " nights");
       var sliderRange = simpleslider
         .sliderBottom()
         .min(min)
@@ -497,18 +543,18 @@ class MapVis {
         .select('div#slider-range')
         .append('svg')
         .attr('width', 500)
-        .attr('height', 100)
+        .attr('height', 70)
         .append('g')
-        .attr('transform', 'translate(70,30)');
+        .attr('transform', 'translate(70,10)');
 
       gRange.call(sliderRange);
     }
 
     function showRoomTypeFilter(id) {
       d3.select("#room-filter").append("button")
-      .text("Entire home/apt")
-      .attr("id", "entire-home")
-      .attr("class", "btn btn-outline-info btn-sm");
+        .text("Entire home/apt")
+        .attr("id", "entire-home")
+        .attr("class", "btn btn-outline-info btn-sm");
       d3.select("#room-filter").append("button")
         .text("Hotel room")
         .attr("id", "hotel")
@@ -522,11 +568,11 @@ class MapVis {
         .attr("id", "shared")
         .attr("class", "btn btn-outline-info btn-sm ");
       d3.select("#room-filter").append("button")
-      .text("Show all points")
-      .attr("id", "all-points")
-      .attr("class", "btn btn-outline-warning btn-sm ");
+        .text("Show all points")
+        .attr("id", "all-points")
+        .attr("class", "btn btn-outline-warning btn-sm ");
       var listingPoints = neighborhoodListings.get(id);
-      d3.select("#entire-home").on("click", function(data) {
+      d3.select("#entire-home").on("click", function (data) {
         // remove old points
         d3.select("#map-svg").selectAll("circle").data([]).exit().remove();
         // draw new points
@@ -535,7 +581,7 @@ class MapVis {
         }));
       });
 
-      d3.select("#hotel").on("click", function(data) {
+      d3.select("#hotel").on("click", function (data) {
         // remove old points
         d3.select("#map-svg").selectAll("circle").data([]).exit().remove();
         // draw new points
@@ -544,7 +590,7 @@ class MapVis {
         }));
       });
 
-      d3.select("#private").on("click", function(data) {
+      d3.select("#private").on("click", function (data) {
         // remove old points
         d3.select("#map-svg").selectAll("circle").data([]).exit().remove();
         // draw new points
@@ -553,7 +599,7 @@ class MapVis {
         }));
       });
 
-      d3.select("#shared").on("click", function(data) {
+      d3.select("#shared").on("click", function (data) {
         // remove old points
         d3.select("#map-svg").selectAll("circle").data([]).exit().remove();
         // draw new points

@@ -8,7 +8,7 @@ var Charts = [];
 var priceDistribList = [];
 var peopleCountList = [];
 var labelsPeople = ['1' , '2', '3', '4', '5', '6+'];
-var labelsPrice = ['50$' , '100$', '150$', '200$', '250$', '300$+'];
+var labelsPrice = ['$50' , '$100', '$150', '$200', '$250', '$300+'];
 var index = 0;
 d3.select("#price").attr('checked', true);
 
@@ -88,7 +88,7 @@ listeners();
 
 function processData (data) {
   var priceDistrib = new Array(0, 0, 0, 0, 0, 0);
-  var total = 0; 
+  var total = 0;
     data.forEach(function(d) {
         let price = d.price;
         if(price >= 300){
@@ -108,14 +108,14 @@ function processData (data) {
     });
     var i;
     for (i = 0; i < priceDistrib.length; i++) {
-        priceDistrib[i] = Math.round((priceDistrib[i] / total)*100); 
+        priceDistrib[i] = Math.round((priceDistrib[i] / total)*100);
     }
     return priceDistrib;
 }
 
 function processDataPeople (data) {
   var peopleCount = new Array(0, 0, 0, 0, 0, 0);
-  var total = 0; 
+  var total = 0;
     data.forEach(function(d) {
         let guests_included = d.guests_included;
         if(guests_included >= 6){
@@ -128,7 +128,7 @@ function processDataPeople (data) {
 
     var i;
     for (i = 0; i < peopleCount.length; i++) {
-        peopleCount[i] = Math.round((peopleCount[i] / total)*100) ; 
+        peopleCount[i] = Math.round((peopleCount[i] / total)*100) ;
     }
     return peopleCount;
 }
@@ -164,10 +164,10 @@ function makeChart(count, ctx, name, scale) {
                 display: false
             },
             scales: {
-                yAxes: [{ 
+                yAxes: [{
                     gridLines: {
                      drawBorder: false,
-                    },         
+                    },
                     ticks: {
                         callback: function(value, index, values) {
                         return value + '%' ;
@@ -257,7 +257,7 @@ function clear(ctx1){
 function listeners() {
     d3.select("#people").on("click", function() {
         var i;
-        for(i = 0; i < Charts.length; i++){ 
+        for(i = 0; i < Charts.length; i++){
             Charts[i].data.datasets[0].data = peopleCountList[i];
             Charts[i].data.labels = labelsPeople;
             Charts[i].options.scales.yAxes[0].ticks.suggestedMax = 80;
@@ -266,7 +266,7 @@ function listeners() {
     });
     d3.select("#price").on("click", function() {
         var i;
-        for(i = 0; i < 6; i++){ 
+        for(i = 0; i < 6; i++){
             Charts[i].data.datasets[0].data = priceDistribList[i];
             Charts[i].data.labels = labelsPrice;
             Charts[i].options.scales.yAxes[0].ticks.suggestedMax = 50;

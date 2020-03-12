@@ -68,3 +68,10 @@ p {
 #listing-info {
     margin-bottom: 5px;
 }
+
+#map-info {
+    text-align: center;
+    display: inline-block;
+    margin-left: 5em;
+    margin-right: 5em;
+}

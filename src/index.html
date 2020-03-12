@@ -49,7 +49,7 @@
               <input type="radio" name="filter" id="price">
               <label for="price"> Price of Listing &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
               <input type="radio" name="filter" id="people">
-              <label for="people"> Number of People Listing Accommodates </label> 
+              <label for="people"> Number of People Listing Accommodates </label>
           </div>
             </div>
           </div>
@@ -57,12 +57,13 @@
             <p></p>
             <div class="box left">
                 <svg width="40" height="600" id="legend-svg"></svg>
-                <svg width="640" height="600">
+                <svg width="640" height="600" id="mapLegend-svg">
                     <g id="map-svg"></g>
                 </svg>
             </div>
             <div class="box right">
-                <h id="city-name"></h>
+                <h4 id="city-name"></h4>
+                <h6 id="map-info"></h6>
                 <p id="selection"></p>
                 <p id="total-listings"></p>
                 <p id="value-range"></p>
@@ -77,6 +78,7 @@
                 <div id="price-over-year-container">
                     <canvas id="line-chart" height="100" width="150"></canvas>
                 </div>
+                <div id="go-back"></div>
             </div>
           </div>
 

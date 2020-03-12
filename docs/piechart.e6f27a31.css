@@ -1,19 +1,19 @@
-.chart-container {
+#chart-container {
     width: 80%;
     height: 480px;
     margin: 0 auto;
   }
   
- 
-  .doughnut-chart-container {
-    height: 360px;
-    width: 360px;
+
+  #doughnut-chart-container {
+    height: 400px;
+    width: 400px;
     float: left;
   }
 
-  .bar-chart-container {
+  #horizontal-bar-chart-container {
     width: 500px;
-    height: 500px;
+    height: 600px;
     float:right
   }
 

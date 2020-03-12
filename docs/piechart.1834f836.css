@@ -1,0 +1,20 @@
+#chart-container {
+    width: 80%;
+    height: 480px;
+    margin: 0 auto;
+  }
+  
+
+  #doughnut-chart-container {
+    height: 400px;
+    width: 400px;
+    float: left;
+  }
+
+  #horizontal-bar-chart-container {
+    width: 500px;
+    height: 600px;
+    float:right
+  }
+
+/*# sourceMappingURL=https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/piechart.1834f836.css.map */
