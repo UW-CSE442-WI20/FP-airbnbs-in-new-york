@@ -232,12 +232,20 @@ class MapVis {
         .attr("width", 40)
         .attr("height", 300)
         .attr("fill", "url(#svgGradient)")
-        .attr("stroke", "#9e9d9d");
+        .attr("stroke", "#9e9d9d")
+        .attr("transform", "translate(40,0)");
       var label = d3.scaleLinear().range([300, 0]).domain([minNumListings, maxNumListings]);
       var legendLabels = d3.axisRight(label);
       svg.append("g")
         .attr("class", "axisWhite")
+        .attr("transform", "translate(40, 0)")
         .call(legendLabels);
+      svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", "-150")
+        .attr("y", "20")
+        .style("text-anchor", "middle")
+        .text("Number of Listings");
     }
 
     // Display the neighborhood and borough name on mouseover
