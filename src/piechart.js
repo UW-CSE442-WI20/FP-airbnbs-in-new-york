@@ -58,9 +58,8 @@ class PieChartVis {
             console.log("graphClickEvent propertyMap : " + propertyMap);
             d3.csv(listings_csv)
                 .then((data) => {
-                    data.forEach(function (d) {
-
-                        // if use neighborhoods or use neighbourhood_group                    
+                    data.forEach(function (d) {      
+                        console.log("property_type : " + d.property_type);        
                         if (d.neighbourhood_group == neighbourhood) {
                             let key = d.property_type;
                             if (propertyMap.has(key)) {
