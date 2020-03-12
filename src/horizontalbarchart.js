@@ -1,18 +1,18 @@
 const d3 = require('d3');
 var TOPLISTINGS = 5;
-const colorPalette = ['#d3d3d3', '#e08984', '#bf809b', '#65c1cf', '#5374a6', '#776399'];
+const colorPalette = ['#310A31', '#847996', '#88B7B5', '#A7CAB1', '#F4ECD6']
 
 
 class HorizontalBarChart {
 
-  constructor(propertyMap) {
+  constructor(propertyMap, neighbourhood) {
+    console.log("neighbourhood : " + neighbourhood);
+
     var self = this;
     var propertyMap = self.sortMapByValuesAndTopListings(propertyMap);
 
     console.log("keys :" + propertyMap.keys());
     console.log("values :" + propertyMap.values());
-
-    var colors = self.generateColorArray(propertyMap.keys().length);
 
     var context  = $("#horizontal-bar-chart-canvas");
     var barChart = new Chart(context, {
@@ -22,7 +22,7 @@ class HorizontalBarChart {
         datasets: [
           {
             label: "Population (millions)",
-            backgroundColor: colors,
+            backgroundColor: colorPalette,
             data: propertyMap.values()
           }
         ]
@@ -31,25 +31,15 @@ class HorizontalBarChart {
         legend: { display: false },
         title: {
           display: true,
-          text: 'Predicted world population (millions) in 2050'
+          text: 'Top Five Property Types in ' + neighbourhood,
+          fontSize: 20,
+          fontColor: "#111"
         }
       }
     });
     return barChart;
 
   }
-
-  // Helper function to generate an array of colors for pie chart data
-  generateColorArray(length) {
-    var colors = [];
-    while (colors.length < length) {
-        do {
-            var color = Math.floor((Math.random() * 1000000) + 1);
-        } while (colors.indexOf(color) >= 0);
-        colors.push("#" + ("000000" + color.toString(16)).slice(-6));
-    }
-    return colors;
-  }  
 
   sortMapByValuesAndTopListings(propertyMap) {
     var arrayLabel = propertyMap.keys();
