@@ -388,7 +388,14 @@ class MapVis {
       clearPreviousListing();
       clearNeighborhoodInfo();
       // add new point data
-      d3.select("#listing-info").append("button")
+      d3.select("#selection").text("Neighborhood: " + d[4]);
+      d3.select("#listing-name").text("Listing name: " + d[5]);
+      d3.select("#min-nights").text("Minimum nights: " + d[2]);
+      d3.select(".active-point").classed("active-point", false);
+      d3.select(this).classed("active-point", true);
+      showAvailability(d[6]);
+      displayPriceOverYear(d);
+      d3.select("#go-back").append("button")
         .text("< Back to neighborhood filters")
         .attr("id", "neighborhood-back-button")
         .attr("class", "btn btn-outline-info btn-sm")
@@ -406,13 +413,6 @@ class MapVis {
           }
           d3.select("#total-listings").text("Total number of listings in this neighborhood: " + numlistings);
         });
-      d3.select("#selection").text("Neighborhood: " + d[4]);
-      d3.select("#listing-name").text("Listing name: " + d[5]);
-      d3.select("#min-nights").text("Minimum nights: " + d[2]);
-      d3.select(".active-point").classed("active-point", false);
-      d3.select(this).classed("active-point", true);
-      showAvailability(d[6]);
-      displayPriceOverYear(d);
     }
 
     function showAvailability(avail) {
