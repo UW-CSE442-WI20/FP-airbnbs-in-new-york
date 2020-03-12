@@ -112,12 +112,12 @@ class MapVis {
         var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
         var tooltipText = '';
         if (currentCity == 'New York') {
-            tooltipText = 'Neighborhood: ' + this.id + '<br>' +
-              'Borough: ' + d.properties.neighbourhood_group +
-              '<br> Number of listings: ' + numlistings;
+          tooltipText = 'Neighborhood: ' + this.id + '<br>' +
+            'Borough: ' + d.properties.neighbourhood_group +
+            '<br> Number of listings: ' + numlistings;
         } else {
-            tooltipText = 'Neighborhood: ' + this.id +
-              '<br> Number of listings: ' + numlistings;
+          tooltipText = 'Neighborhood: ' + this.id +
+            '<br> Number of listings: ' + numlistings;
         }
         return tooltipText;
       }
@@ -208,34 +208,34 @@ class MapVis {
       var defs = svg.append("defs");
 
       var gradient = defs.append("linearGradient")
-      .attr("id", "svgGradient")
-      .attr("x1", "100%")
-      .attr("x2", "100%")
-      .attr("y1", "0%")
-      .attr("y2", "100%");
+        .attr("id", "svgGradient")
+        .attr("x1", "100%")
+        .attr("x2", "100%")
+        .attr("y1", "0%")
+        .attr("y2", "100%");
 
       gradient.append("stop")
-      .attr('class', 'start')
-      .attr("offset", "0%")
-      .attr("stop-color", d3.interpolatePurples(1))
-      .attr("stop-opacity", 1);
+        .attr('class', 'start')
+        .attr("offset", "0%")
+        .attr("stop-color", d3.interpolatePurples(1))
+        .attr("stop-opacity", 1);
 
       gradient.append("stop")
-      .attr('class', 'end')
-      .attr("offset", "100%")
-      .attr("stop-color", d3.interpolatePurples(0.3))
-      .attr("stop-opacity", 1);
+        .attr('class', 'end')
+        .attr("offset", "100%")
+        .attr("stop-color", d3.interpolatePurples(0.3))
+        .attr("stop-opacity", 1);
 
       var legend = svg.append("rect")
-              .attr("width", 40)
-              .attr("height", 300)
-              .attr("fill", "url(#svgGradient)")
-              .attr("stroke", "#9e9d9d");
+        .attr("width", 40)
+        .attr("height", 300)
+        .attr("fill", "url(#svgGradient)")
+        .attr("stroke", "#9e9d9d");
       var label = d3.scaleLinear().range([300, 0]).domain([minNumListings, maxNumListings]);
       var legendLabels = d3.axisRight(label);
       svg.append("g")
-                .attr("class", "axisWhite")
-                .call(legendLabels);
+        .attr("class", "axisWhite")
+        .call(legendLabels);
     }
 
     // Display the neighborhood and borough name on mouseover
@@ -289,8 +289,8 @@ class MapVis {
         .duration(750)
         .style("stroke-width", "0.5px")
         .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
-      drawListingPoints(neighborhoodListings.get(this.id));
 
+      drawListingPoints(neighborhoodListings.get(this.id));
       showSlider(this.id);
       showRoomTypeFilter(this.id);
       var numlistings = neighborhoodCt.get(this.id) == undefined ? 0 : neighborhoodCt.get(this.id);
@@ -325,6 +325,7 @@ class MapVis {
       d3.select("#listing-avail").select("svg").data([]).exit().remove();
       d3.select("#listing-info").selectAll("p").text("");
       document.getElementById("price-over-year-container").style.display = "none";
+      d3.selectAll("button").remove();
     }
 
     function clearNeighborhoodInfo() {
@@ -381,9 +382,30 @@ class MapVis {
     }
 
     function handlePointClick(d) {
+      var data = d;
+      console.log(data);
       // remove old point data
       clearPreviousListing();
+      clearNeighborhoodInfo();
       // add new point data
+      d3.select("#listing-info").append("button")
+        .text("< Back to neighborhood filters")
+        .attr("id", "neighborhood-back-button")
+        .attr("class", "btn btn-outline-info btn-sm")
+        .lower()
+        .on("click", () => {
+          clearPreviousListing();
+          drawListingPoints(neighborhoodListings.get(data[4]));
+          showSlider(data[4]);
+          showRoomTypeFilter(data[4]);
+          var numlistings = neighborhoodCt.get(data[4]) == undefined ? 0 : neighborhoodCt.get(data[4]);
+          if (city == "Austin") {
+            d3.select("#selection").text("General Neighborhood: " + austinZipCodes.get(data[4]) + ", Zip Code: " + data[4]);
+          } else {
+            d3.select("#selection").text("Neighborhood: " + data[4]);
+          }
+          d3.select("#total-listings").text("Total number of listings in this neighborhood: " + numlistings);
+        });
       d3.select("#selection").text("Neighborhood: " + d[4]);
       d3.select("#listing-name").text("Listing name: " + d[5]);
       d3.select("#min-nights").text("Minimum nights: " + d[2]);
@@ -487,7 +509,7 @@ class MapVis {
       var f = d3.format(',.2r');
 
       d3.select('p#value-range')
-            .text("Minimum nights range: " + f(min) + "-" + f(max) + " nights");
+        .text("Minimum nights range: " + f(min) + "-" + f(max) + " nights");
       var sliderRange = simpleslider
         .sliderBottom()
         .min(min)
@@ -525,9 +547,9 @@ class MapVis {
 
     function showRoomTypeFilter(id) {
       d3.select("#room-filter").append("button")
-      .text("Entire home/apt")
-      .attr("id", "entire-home")
-      .attr("class", "btn btn-outline-info btn-sm");
+        .text("Entire home/apt")
+        .attr("id", "entire-home")
+        .attr("class", "btn btn-outline-info btn-sm");
       d3.select("#room-filter").append("button")
         .text("Hotel room")
         .attr("id", "hotel")
@@ -541,11 +563,11 @@ class MapVis {
         .attr("id", "shared")
         .attr("class", "btn btn-outline-info btn-sm ");
       d3.select("#room-filter").append("button")
-      .text("Show all points")
-      .attr("id", "all-points")
-      .attr("class", "btn btn-outline-warning btn-sm ");
+        .text("Show all points")
+        .attr("id", "all-points")
+        .attr("class", "btn btn-outline-warning btn-sm ");
       var listingPoints = neighborhoodListings.get(id);
-      d3.select("#entire-home").on("click", function(data) {
+      d3.select("#entire-home").on("click", function (data) {
         // remove old points
         d3.select("#map-svg").selectAll("circle").data([]).exit().remove();
         // draw new points
@@ -554,7 +576,7 @@ class MapVis {
         }));
       });
 
-      d3.select("#hotel").on("click", function(data) {
+      d3.select("#hotel").on("click", function (data) {
         // remove old points
         d3.select("#map-svg").selectAll("circle").data([]).exit().remove();
         // draw new points
@@ -563,7 +585,7 @@ class MapVis {
         }));
       });
 
-      d3.select("#private").on("click", function(data) {
+      d3.select("#private").on("click", function (data) {
         // remove old points
         d3.select("#map-svg").selectAll("circle").data([]).exit().remove();
         // draw new points
@@ -572,7 +594,7 @@ class MapVis {
         }));
       });
 
-      d3.select("#shared").on("click", function(data) {
+      d3.select("#shared").on("click", function (data) {
         // remove old points
         d3.select("#map-svg").selectAll("circle").data([]).exit().remove();
         // draw new points
