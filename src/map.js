@@ -415,7 +415,11 @@ class MapVis {
       d3.select(".active-point").classed("active-point", false);
       d3.select(this).classed("active-point", true);
       showAvailability(d[6]);
+
+      $("#line-chart").remove();// remove <canvas> element
+      $("#price-over-year-container").append('<canvas id="line-chart" height="100" width="150"></canvas>');
       displayPriceOverYear(d);
+
       d3.select("#go-back").append("button")
         .text("< Back to neighborhood filters")
         .attr("id", "neighborhood-back-button")
