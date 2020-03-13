@@ -155,7 +155,7 @@ class MapVis {
       neighborhoods = neighborhoodsSeattle;
     } else if (this.city == "Austin") {
       var projection = d3.geoMercator()
-        .center([-97.7559964, 30.3071816])
+        .center([-97.8059964, 30.3071816])
         .scale(50000)
         .translate([mapWidth / 2, mapHeight / 2]);
       neighborhoods = neighborhoodsAustin;
@@ -173,8 +173,8 @@ class MapVis {
       neighborhoods = neighborhoodsNOLA;
     } else if (this.city == "Honolulu") {
       var projection = d3.geoMercator()
-        .center([-157.95, 21.48])
-        .scale(50000)
+        .center([-157.99, 21.48])
+        .scale(46000)
         .translate([mapWidth / 2, mapHeight / 2]);
       neighborhoods = neighborhoodsHonolulu;
     }
@@ -286,9 +286,6 @@ class MapVis {
         scale = 0.5 / Math.max(dx / mapWidth, dy / mapHeight),
         translate = [mapWidth / 2 - scale * x, mapHeight / 2 - scale * y];
 
-      console.log("dx: " + dx);
-      console.log("dy: " + dy);
-
       if (dx < 30 || dy < 30) {
           circleSize = "tiny";
       } else if (dx < 80 || dy < 80) {
@@ -314,6 +311,7 @@ class MapVis {
         d3.select("#selection").text("Neighborhood: " + this.id);
       }
       d3.select("#total-listings").text("Total number of listings in this neighborhood: " + numlistings);
+      document.getElementById("map-info").style.display = "none";
     }
 
     function zoomed() {
@@ -333,6 +331,7 @@ class MapVis {
         .remove();
       clearPreviousListing();
       clearNeighborhoodInfo();
+      document.getElementById("map-info").style.display = "inline-block";
       d3.select("#map-info").text(mapInstructions);
     }
 
