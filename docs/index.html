@@ -7,7 +7,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.6.6/jquery.fullPage.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/styles.32113038.css">
     <link rel="stylesheet" type="text/css" href="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/tipsy.18d20c19.css">
-    <link rel="stylesheet" type="text/css" href="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/piechart.f47e462d.css">
+    <link rel="stylesheet" type="text/css" href="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/piechart.253ec06a.css">
     <link rel="stylesheet" type="text/css" href="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/barchart.c62c6b18.css">
 
     <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
@@ -52,16 +52,16 @@
               <input type="radio" name="filter" id="price">
               <label for="price"> Price of Listing &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
               <input type="radio" name="filter" id="people">
-              <label for="people"> Number of People Listing Accommodates </label> 
+              <label for="people"> Number of People Listing Accommodates </label>
           </div>
             </div>
           </div>
           <div class="section">
             <p></p>
             <div class="box left">
-                <svg width="100" height="600" id="legend-svg"></svg>
                 <svg width="640" height="600">
                     <g id="map-svg"></g>
+                    <svg width="100" height="500" id="legend-svg"></svg>
                 </svg>
             </div>
             <div class="box right">
@@ -87,27 +87,24 @@
           </div>
 
           <div class="section gray">
-
-            <p></p>
-            <!-- <svg width = "600" height = "600" id = "piechart-svg"></svg> -->
-            <!-- <canvas id="piechart-canvas" width="600" height="600"></canvas> -->
-
-
-            <div id="chart-container">
-              <div id="doughnut-chart-container">
-                  <canvas id="doughnut-chartcanvas-1"></canvas>
+              <div class="box left">
+                  <div id="doughnut-chart-container">
+                      <canvas id="doughnut-chartcanvas-1"></canvas>
+                  </div>
+                  <div id="chart-instructions">
+                      Click on one of the neighborhood sections for the property type breakdown!
+                  </div>
               </div>
-              <div id="horizontal-bar-chart-container">
-                  <!-- <canvas id="doughnut-chartcanvas-2"></canvas> -->
-                  <canvas id="horizontal-bar-chart-canvas"></canvas>
+              <div class="box right">
+                  <div id="horizontal-bar-chart-container">
+                      <canvas id="horizontal-bar-chart-canvas"></canvas>
+                  </div>
               </div>
-          </div>
-          <div id="chart-instructions">Click on one of the neighborhood sections for the property type breakdown!</div>
           </div>
       </div>
-      <script src="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/src.a2b58627.js"></script>
-      <script src="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/piechart.3c7494c6.js"></script>
-      <script src="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/barchart.2527bdd5.js"></script>
+      <script src="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/src.ed304ef8.js"></script>
+      <script src="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/piechart.5d6c909e.js"></script>
+      <script src="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/barchart.0ff2f21b.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   </body>
