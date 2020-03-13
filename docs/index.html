@@ -5,10 +5,10 @@
     <title>Explore Airbnb Cities</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.6.6/jquery.fullPage.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/styles.e94c472a.css">
+    <link rel="stylesheet" type="text/css" href="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/styles.32113038.css">
     <link rel="stylesheet" type="text/css" href="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/tipsy.18d20c19.css">
-    <link rel="stylesheet" type="text/css" href="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/piechart.1834f836.css">
-    <link rel="stylesheet" type="text/css" href="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/barchart.93f804bc.css">
+    <link rel="stylesheet" type="text/css" href="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/piechart.f47e462d.css">
+    <link rel="stylesheet" type="text/css" href="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/barchart.c62c6b18.css">
 
     <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
 
@@ -19,12 +19,15 @@
   <body>
       <div id="fullpage">
           <div class="section">
+              <div class="logo"></div>
               <h1>Top Airbnb Cities</h1>
+              <h4 style="font-size: 20px;"> Jessica Zhu, Puja Ramanathan, Sonya Lao, Sabrina Pearson </h4> <br>
+              <h4 style="color:#857e7e; font-size: 14px;">  Data sourced from: http://insideairbnb.com/ </h4>
           </div>
           <div class="section gray">
             <div style="height:48px;"></div>
-            <h1 style="color:#FC642D; font-size: 36px;">Select from Popular Airbnb Destinations</h1>
-            <div style="font-size:18px;">Click on one of the following cities to explore Airbnb listings in that area!</div>
+            <h1 style="color:#FF5A5F; font-size: 36px;">Select from Popular Airbnb Destinations</h1>
+            <div style="font-size:18px;">Click on one of the following cities to explore Airbnb listings in that city!</div>
             <div style="height:30px;"></div>
             <div class="chart-container-r1">
               <div class="bar-chart-container">
@@ -49,15 +52,15 @@
               <input type="radio" name="filter" id="price">
               <label for="price"> Price of Listing &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
               <input type="radio" name="filter" id="people">
-              <label for="people"> Number of People Listing Accommodates </label>
+              <label for="people"> Number of People Listing Accommodates </label> 
           </div>
             </div>
           </div>
           <div class="section">
             <p></p>
             <div class="box left">
-                <svg width="40" height="600" id="legend-svg"></svg>
-                <svg width="640" height="600" id="mapLegend-svg">
+                <svg width="100" height="600" id="legend-svg"></svg>
+                <svg width="640" height="600">
                     <g id="map-svg"></g>
                 </svg>
             </div>
@@ -68,6 +71,7 @@
                 <p id="total-listings"></p>
                 <p id="value-range"></p>
                 <div id="slider-range"></div>
+                <br>
                 <div id="room-filter"></div>
                 <div id="listing-info">
                     <p id="listing-name"></p>
@@ -93,18 +97,17 @@
               <div id="doughnut-chart-container">
                   <canvas id="doughnut-chartcanvas-1"></canvas>
               </div>
-
               <div id="horizontal-bar-chart-container">
                   <!-- <canvas id="doughnut-chartcanvas-2"></canvas> -->
                   <canvas id="horizontal-bar-chart-canvas"></canvas>
               </div>
           </div>
-
+          <div id="chart-instructions">Click on one of the neighborhood sections for the property type breakdown!</div>
           </div>
       </div>
-      <script src="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/src.1ce303e1.js"></script>
-      <script src="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/piechart.6c5d4dcf.js"></script>
-      <script src="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/barchart.87dbbc4b.js"></script>
+      <script src="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/src.a2b58627.js"></script>
+      <script src="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/piechart.3c7494c6.js"></script>
+      <script src="https://uw-cse442-wi20.github.io/FP-airbnbs-in-new-york/barchart.2527bdd5.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   </body>

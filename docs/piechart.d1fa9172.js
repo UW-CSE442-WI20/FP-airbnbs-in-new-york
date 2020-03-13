@@ -28894,19 +28894,19 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var d3 = require('d3');
 
 var TOPLISTINGS = 5;
-var colorPalette = ['#d3d3d3', '#e08984', '#bf809b', '#65c1cf', '#5374a6', '#776399'];
+var colorPalette = ['#310A31', '#847996', '#88B7B5', '#A7CAB1', '#F4ECD6'];
 
 var HorizontalBarChart =
 /*#__PURE__*/
 function () {
-  function HorizontalBarChart(propertyMap) {
+  function HorizontalBarChart(propertyMap, neighbourhood) {
     _classCallCheck(this, HorizontalBarChart);
 
+    console.log("neighbourhood : " + neighbourhood);
     var self = this;
     var propertyMap = self.sortMapByValuesAndTopListings(propertyMap);
     console.log("keys :" + propertyMap.keys());
     console.log("values :" + propertyMap.values());
-    var colors = self.generateColorArray(propertyMap.keys().length);
     var context = $("#horizontal-bar-chart-canvas");
     var barChart = new Chart(context, {
       type: 'horizontalBar',
@@ -28914,42 +28914,38 @@ function () {
         labels: propertyMap.keys(),
         datasets: [{
           label: "Population (millions)",
-          backgroundColor: colors,
+          backgroundColor: colorPalette,
           data: propertyMap.values()
         }]
       },
       options: {
+        scales: {
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              fontSize: 13,
+              labelString: 'Counts'
+            }
+          }]
+        },
         legend: {
           display: false
         },
         title: {
           display: true,
-          text: 'Predicted world population (millions) in 2050'
+          text: neighbourhood + "\'s Top Five Property Types",
+          fontSize: 20,
+          fontColor: "#111"
         }
       }
     });
     return barChart;
-  } // Helper function to generate an array of colors for pie chart data
-
+  }
 
   _createClass(HorizontalBarChart, [{
-    key: "generateColorArray",
-    value: function generateColorArray(length) {
-      var colors = [];
-
-      while (colors.length < length) {
-        do {
-          var color = Math.floor(Math.random() * 1000000 + 1);
-        } while (colors.indexOf(color) >= 0);
-
-        colors.push("#" + ("000000" + color.toString(16)).slice(-6));
-      }
-
-      return colors;
-    }
-  }, {
     key: "sortMapByValuesAndTopListings",
     value: function sortMapByValuesAndTopListings(propertyMap) {
+      TOPLISTINGS = 5;
       var arrayLabel = propertyMap.keys();
       var arrayData = propertyMap.values();
       var arrayOfObj = arrayLabel.map(function (d, i) {
@@ -28970,7 +28966,11 @@ function () {
       var newMap = d3.map();
 
       for (var i = 0; i < TOPLISTINGS; i++) {
-        newMap.set(newArrayLabel[i], newArrayData[i]);
+        if (newArrayLabel[i] == 'NA') {
+          TOPLISTINGS++;
+        } else {
+          newMap.set(newArrayLabel[i], newArrayData[i]);
+        }
       }
 
       return newMap;
@@ -28992,7 +28992,7 @@ var d3 = require('d3');
 
 var HorizontalBarChart = require('./horizontalbarchart');
 
-var colorPalette = ['#d3d3d3', '#e08984', '#bf809b', '#65c1cf', '#5374a6', '#776399'];
+var colorPalette = ['#e08984', '#bf809b', '#65c1cf', '#5374a6', '#776399', '#C0CAAD', '#9DA9A0', '#654c4F', '#B26E63', '#CEC075', '#989788', '#51344D', '#6F5060', '#A78682', '#E7EBC5', '#B3001B', '#262626', '#255C99', '#7EA3CC', '#CCAD8F', '#F7B801', '#F18701', '#F35B04', '#FFC4EB', '#F39C6B', '#FFE4FA', '#3B1C32'];
 var city = "New York";
 
 var PieChartVis =
@@ -29003,7 +29003,7 @@ function () {
 
     var self = this;
     this.city = city;
-    var listings_csv = "listings_small.csv"; // New York by default
+    var listings_csv = "listings_small.csv"; // New York by default        
 
     if (this.city === "Seattle") {
       listings_csv = "listings_small_seattle.csv";
@@ -29013,13 +29013,13 @@ function () {
       listings_csv = "listings_small_sf.csv";
     } else if (this.city === "New Orleans") {
       listings_csv = "listings_small_nola.csv";
-    } else if (this.city == "Honoulu") {
+    } else if (this.city == "Honolulu") {
+      // use neighborhoods
       listings_csv = "listings_hono.csv";
     }
 
     console.log("listings_csv : " + listings_csv);
-    console.log("listings_csv : " + city); // resetPieChartAndHorizontalBarChart();
-    //options
+    console.log("listings_csv : " + city); //options
 
     var options = {
       onClick: graphClickEvent,
@@ -29027,8 +29027,8 @@ function () {
       title: {
         display: true,
         position: "top",
-        text: "Doughnut Chart",
-        fontSize: 18,
+        text: this.city + "\'s Breakdown of Airbnb Listings",
+        fontSize: 25,
         fontColor: "#111"
       },
       legend: {
@@ -29043,13 +29043,12 @@ function () {
     return self.setDoughnutChartData(listings_csv, options);
 
     function graphClickEvent(event, item) {
-      var neighborhood = this.data.labels[item[0]._index];
-      console.log("neighborhood : " + neighborhood);
+      var neighbourhood = this.data.labels[item[0]._index];
       var propertyMap = d3.map();
       console.log("graphClickEvent propertyMap : " + propertyMap);
       d3.csv(listings_csv).then(function (data) {
         data.forEach(function (d) {
-          if (d.neighbourhood_group == neighborhood) {
+          if (d.neighbourhood_group == neighbourhood) {
             var key = d.property_type;
 
             if (propertyMap.has(key)) {
@@ -29062,7 +29061,7 @@ function () {
         });
         $("#horizontal-bar-chart-canvas").remove();
         $('#horizontal-bar-chart-container').append('<canvas id="horizontal-bar-chart-canvas"></canvas>');
-        var horizontalBarChart = new HorizontalBarChart(propertyMap);
+        var horizontalBarChart = new HorizontalBarChart(propertyMap, neighbourhood);
       });
     }
 
@@ -29075,30 +29074,31 @@ function () {
     value: function setDoughnutChartData(listings_csv, options) {
       resetPieChart();
       console.log("setDoughnutChartData listings_csv : " + listings_csv);
-      var neighborhoodMap = d3.map();
+      var neighbourhoodMap = d3.map();
       d3.csv(listings_csv).then(function (data) {
         data.forEach(function (d) {
           var key = d.neighbourhood_group;
+          console.log("key : " + key);
 
-          if (neighborhoodMap.has(key)) {
-            var value = neighborhoodMap.get(key);
-            neighborhoodMap.set(key, value + 1);
+          if (neighbourhoodMap.has(key)) {
+            var value = neighbourhoodMap.get(key);
+            neighbourhoodMap.set(key, value + 1);
           } else {
-            neighborhoodMap.set(key, 1);
+            neighbourhoodMap.set(key, 1);
           }
         });
-        colors = generateColorArray(neighborhoodMap.keys().length); //doughnut chart data
+        colors = generateColorArray(neighbourhoodMap.keys().length); //doughnut chart data
 
         var chartData = {
-          labels: neighborhoodMap.keys(),
+          labels: neighbourhoodMap.keys(),
           datasets: [{
             label: "TeamA Score",
-            data: neighborhoodMap.values(),
+            data: neighbourhoodMap.values(),
             // backgroundColor: colorPalette,
             // borderColor: colorPalette,
             backgroundColor: colors,
             borderColor: colors,
-            borderWidth: Array(neighborhoodMap.keys().length).fill(1)
+            borderWidth: Array(neighbourhoodMap.keys().length).fill(1)
           }]
         };
         var context = $("#doughnut-chartcanvas-1"); //create Chart class object
@@ -29119,17 +29119,7 @@ function () {
 
 
       function generateColorArray(length) {
-        var colors = [];
-
-        while (colors.length < length) {
-          do {
-            var color = Math.floor(Math.random() * 1000000 + 1);
-          } while (colors.indexOf(color) >= 0);
-
-          colors.push("#" + ("000000" + color.toString(16)).slice(-6));
-        }
-
-        return colors;
+        return colorPalette.slice(0, length);
       }
     }
   }]);
@@ -29166,7 +29156,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52379" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56494" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -6,15 +6,24 @@
   
 
   #doughnut-chart-container {
-    height: 400px;
-    width: 400px;
+    height: 550px;
+    width: 550px;
     float: left;
   }
 
   #horizontal-bar-chart-container {
-    width: 500px;
-    height: 600px;
-    float:right
+    width: 600px;
+    height: 1000px;
+    float:right;
+    padding-top: 100px;
+  }
+
+  #chart-instructions {
+    bottom: 0;
+    font-size: 18;
+    padding-top: 50px;
+    font-weight: bold;
+    display:inline-block;
   }
 
 /*# sourceMappingURL=/piechart.e6f27a31.css.map */
