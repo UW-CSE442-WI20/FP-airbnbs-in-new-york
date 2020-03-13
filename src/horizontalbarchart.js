@@ -21,7 +21,7 @@ class HorizontalBarChart {
         labels: propertyMap.keys(),
         datasets: [
           {
-            label: "Population (millions)",
+            label: "Listings",
             backgroundColor: colorPalette,
             data: propertyMap.values()
           }
@@ -33,7 +33,7 @@ class HorizontalBarChart {
             scaleLabel: {
               display: true,
               fontSize: 13,
-              labelString: 'Counts'
+              labelString: 'Number of Listings'
             }
           }]
         },

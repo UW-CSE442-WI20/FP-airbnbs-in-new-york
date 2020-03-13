@@ -15,7 +15,7 @@ class PieChartVis {
         this.city = city;
 
 
-        var listings_csv = "listings_small.csv"; // New York by default        
+        var listings_csv = "listings_small.csv"; // New York by default
         if (this.city === "Seattle") {
             listings_csv = "listings_small_seattle.csv";
         } else if (this.city === "Austin") {
@@ -28,10 +28,6 @@ class PieChartVis {
             listings_csv = "listings_hono.csv";
         }
 
-          console.log("listings_csv : " + listings_csv);
-          console.log("listings_csv : " + city);
-
-
         //options
         var options = {
             onClick: graphClickEvent,
@@ -40,7 +36,7 @@ class PieChartVis {
                 display: true,
                 position: "top",
                 text: this.city + "\'s Breakdown of Airbnb Listings",
-                fontSize: 25,
+                fontSize: 20,
                 fontColor: "#111"
             },
             legend: {
@@ -58,10 +54,9 @@ class PieChartVis {
         function graphClickEvent(event, item) {
             var neighbourhood = this.data.labels[item[0]._index];
             var propertyMap = d3.map();
-            console.log("graphClickEvent propertyMap : " + propertyMap);
             d3.csv(listings_csv)
                 .then((data) => {
-                    data.forEach(function (d) {      
+                    data.forEach(function (d) {
                         if (d.neighbourhood_group == neighbourhood) {
                             let key = d.property_type;
                             if (propertyMap.has(key)) {
@@ -73,8 +68,8 @@ class PieChartVis {
                         }
                     });
                     $("#horizontal-bar-chart-canvas").remove();
-                    $('#horizontal-bar-chart-container').append('<canvas id="horizontal-bar-chart-canvas"></canvas>');  
-          
+                    $('#horizontal-bar-chart-container').append('<canvas id="horizontal-bar-chart-canvas"></canvas>');
+
                     var horizontalBarChart = new HorizontalBarChart(propertyMap, neighbourhood);
                 });
         };
@@ -82,18 +77,12 @@ class PieChartVis {
     // HELPER FUNCTION TO INITALIZE THE DATA
     setDoughnutChartData(listings_csv, options) {
         resetPieChart();
-        console.log("setDoughnutChartData listings_csv : " + listings_csv);
         var neighbourhoodMap = d3.map();
-
-        
 
         d3.csv(listings_csv)
             .then((data) => {
                 data.forEach(function (d) {
                     let key = d.neighbourhood_group;
-
-                    console.log("key : " + key);
-
                     if (neighbourhoodMap.has(key)) {
                         var value = neighbourhoodMap.get(key);
                         neighbourhoodMap.set(key, value + 1);
@@ -101,7 +90,7 @@ class PieChartVis {
                         neighbourhoodMap.set(key, 1);
                     }
                 });
-                
+
                 colors = generateColorArray(neighbourhoodMap.keys().length);
 
                 //doughnut chart data
@@ -119,7 +108,7 @@ class PieChartVis {
                         }
                     ]
                 };
-        
+
                 var context = $("#doughnut-chartcanvas-1");
                 //create Chart class object
                 var chart = new Chart(context, {
@@ -134,12 +123,12 @@ class PieChartVis {
             $("#doughnut-chartcanvas-1").remove();// remove <canvas> element
             $('#doughnut-chart-container').append('<canvas id="doughnut-chartcanvas-1"></canvas>');
         }
-    
+
         // Helper function to generate an array of colors for pie chart data
         function generateColorArray(length) {
             return colorPalette.slice(0, length);
         }
-    
+
 
     }
 
