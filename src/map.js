@@ -312,6 +312,7 @@ class MapVis {
       }
       d3.select("#total-listings").text("Total number of listings in this neighborhood: " + numlistings);
       document.getElementById("map-info").style.display = "none";
+      document.getElementById("legend-svg").style.display = "none";
     }
 
     function zoomed() {
@@ -324,7 +325,8 @@ class MapVis {
       d3.select("#map-svg").transition()
         .duration(750)
         .style("stroke-width", "0.5px")
-        .attr("transform", "");
+        .attr("transform", "")
+        .on("end", (d) => document.getElementById("legend-svg").style.display = "block");
       d3.select("#map-svg").selectAll("circle")
         .data([])
         .exit()
