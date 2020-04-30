@@ -17,7 +17,7 @@
   "dependencies": {
     "chart.js": "^2.9.3",
     "d3": "^5.15.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jquery.tipsy": "^1.0.3"
   }
 }
