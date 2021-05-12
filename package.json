@@ -15,7 +15,7 @@
     "parcel-plugin-static-files-copy": "^2.3.1"
   },
   "dependencies": {
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "d3": "^5.15.0",
     "jquery": "^3.4.1",
     "jquery.tipsy": "^1.0.3"
